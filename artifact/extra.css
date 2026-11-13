@@ -1,0 +1,36 @@
+/* ───────────── Tilpasninger til artifact-visningen ───────────── */
+body {
+  font-size: 1rem;
+}
+/* Sidekanten holder sig fri af telefonens systemkanter */
+.px-4 {
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+@media (min-width: 40rem) {
+  .sm\:px-6 {
+    padding-left: max(24px, env(safe-area-inset-left, 0px));
+    padding-right: max(24px, env(safe-area-inset-right, 0px));
+  }
+}
+/* Fastgjorte bjælker starter under telefonens statuslinje */
+:root {
+  --top-nav: env(safe-area-inset-top, 0px);
+}
+@media (min-width: 768px) {
+  :root {
+    --top-nav: calc(64px + env(safe-area-inset-top, 0px));
+  }
+}
+.sticky.top-0,
+header.glass {
+  top: env(safe-area-inset-top, 0px);
+}
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  z-index: 60;
+  background: var(--bg);
+}

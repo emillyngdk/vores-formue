@@ -1,26 +1,348 @@
 @import "tailwindcss";
 
+/* ───────────── NAT & RAV ─────────────
+   Mørk er standard. Lys via data-theme="light"
+   eller systemets lyse tilstand, når intet er valgt. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #0b1026;
+  --surface: #141a38;
+  --surface-2: #1c2350;
+  --ink: #f4f1ea;
+  --muted: #9aa0c3;
+  --accent: #ffb547;
+  --accent-text: #ffb547;
+  --violet: #8b6cff;
+  --mint: #3ddc97;
+  --sky: #5ac8fa;
+  --coral: #ff6b5b;
+  --line: rgba(255, 255, 255, 0.08);
+  --on-accent: #0b1026;
+  --on-fill: #0b1026;
+  --glow-a: rgba(255, 181, 71, 0.22);
+  --glow-b: rgba(139, 108, 255, 0.22);
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  color-scheme: dark;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #f6f3ec;
+    --surface: #ffffff;
+    --surface-2: #efeae0;
+    --ink: #0b1026;
+    --muted: #5d6380;
+      --accent: #e08a00;
+    --accent-text: #96590a;
+    --violet: #5b3fe0;
+    --mint: #0a7a50;
+    --sky: #1269b3;
+    --coral: #c8361f;
+    --line: rgba(11, 16, 38, 0.1);
+    --on-accent: #0b1026;
+    --on-fill: #ffffff;
+    --glow-a: rgba(224, 138, 0, 0.16);
+    --glow-b: rgba(91, 63, 224, 0.12);
+    --shadow: 0 10px 30px rgba(11, 16, 38, 0.08);
+    color-scheme: light;
   }
 }
 
+:root[data-theme="light"] {
+  --bg: #f6f3ec;
+  --surface: #ffffff;
+  --surface-2: #efeae0;
+  --ink: #0b1026;
+  --muted: #5d6380;
+  --accent: #e08a00;
+  --accent-text: #96590a;
+  --violet: #5b3fe0;
+  --mint: #0a7a50;
+  --sky: #1269b3;
+  --coral: #c8361f;
+  --line: rgba(11, 16, 38, 0.1);
+  --on-accent: #0b1026;
+  --on-fill: #ffffff;
+  --glow-a: rgba(224, 138, 0, 0.16);
+  --glow-b: rgba(91, 63, 224, 0.12);
+  --shadow: 0 10px 30px rgba(11, 16, 38, 0.08);
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-text: var(--accent-text);
+  --color-violet: var(--violet);
+  --color-mint: var(--mint);
+  --color-sky: var(--sky);
+  --color-coral: var(--coral);
+  --color-line: var(--line);
+  --color-on-accent: var(--on-accent);
+  --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  background: var(--bg);
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+/* Fin støjtekstur, 2–3 % */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.display {
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.eyebrow {
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+  }
+}
+
+.hero-glow {
+  background:
+    radial-gradient(40% 50% at 30% 40%, var(--glow-a), transparent 70%),
+    radial-gradient(40% 50% at 70% 60%, var(--glow-b), transparent 70%);
+}
+
+.cta {
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 700;
+  border-radius: 999px;
+  box-shadow: 0 0 0 0 var(--glow-a);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+.cta:hover {
+  box-shadow: 0 0 32px 4px var(--glow-a);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ───────────── Skydere ───────────── */
+.range {
+  --fill: 0%;
+  --range-color: var(--accent);
+  appearance: none;
+  -webkit-appearance: none;
+  display: block;
+  width: 100%;
+  height: 32px;
+  background: transparent;
+  cursor: pointer;
+  touch-action: pan-y;
+}
+.range::-webkit-slider-runnable-track {
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--range-color) var(--fill), var(--surface-2) var(--fill));
+}
+.range::-moz-range-track {
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--range-color) var(--fill), var(--surface-2) var(--fill));
+}
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 26px;
+  height: 26px;
+  margin-top: -9px;
+  border-radius: 50%;
+  background: var(--ink);
+  border: 4px solid var(--range-color);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+}
+.range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--ink);
+  border: 4px solid var(--range-color);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+}
+.range:focus-visible {
+  outline: none;
+}
+.range:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+/* Plads til bundmenuen på mobil */
+:root {
+  --bottom-nav: 0px;
+}
+@media (max-width: 767px) {
+  :root {
+    --bottom-nav: calc(64px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+.glass {
+  background: color-mix(in srgb, var(--bg) 96%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0 0.875rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+:root {
+  --top-nav: 0px;
+}
+@media (min-width: 768px) {
+  :root {
+    --top-nav: 64px;
+  }
+}
+
+/* ───────────── Hvad nu hvis ───────────── */
+:root {
+  --whatif-h: 0px;
+}
+.whatif-scroll {
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.whatif-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Det bløde pulsslag om 2035-punktet på forsiden */
+@keyframes hero-pulse {
+  0%, 100% { opacity: 0.9; transform: scale(0.8); }
+  50% { opacity: 0.2; transform: scale(1.45); }
+}
+.hero-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hero-pulse 2.8s ease-in-out infinite;
+}
+
+/* ───────────── Telefon og touch ───────────── */
+button,
+a,
+summary,
+[role="button"],
+[role="radio"],
+label {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+button,
+summary,
+[role="button"] {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+.stepper {
+  display: none;
+}
+@media (pointer: coarse) {
+  .stepper {
+    display: grid;
+  }
+  /* Større flade at ramme, samme udseende */
+  .range {
+    height: 44px;
+  }
+  button:active:not(:disabled),
+  a.cta:active,
+  summary:active {
+    transform: scale(0.97);
+  }
+  button,
+  a.cta,
+  summary {
+    transition-property: transform, background-color, border-color, color, box-shadow, opacity;
+    transition-duration: 0.12s;
+  }
+}
+/* iOS zoomer ind på felter med tekst under 16 px */
+@media (max-width: 767px) {
+  input[type="text"],
+  input:not([type]),
+  input[type="month"],
+  input[inputmode],
+  textarea {
+    font-size: 16px;
+  }
+}
+.whatif-scroll {
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+  mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+}
+.whatif-sheet {
+  overscroll-behavior: contain;
 }
