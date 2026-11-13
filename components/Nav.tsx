@@ -25,8 +25,10 @@ export function Nav() {
   const active = (href: string) => (href === "/" ? path === "/" : path.startsWith(href));
   return (
     <>
-      <header className="glass top-0 z-40 border-b border-line md:sticky">
-        <div className="mx-auto flex h-16 max-w-[1280px] items-center justify-between px-4 sm:px-6">
+      {/* Altid synlig. Som app på hjemmeskærmen ligger den under telefonens statuslinje, så den får plads til den. */}
+      <header className="glass sticky top-0 z-40 border-b border-line" style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}>
+        <span aria-hidden className="status-band" />
+        <div className="mx-auto flex h-14 max-w-[1280px] items-center justify-between px-4 sm:px-6 md:h-16">
           <Link href="/" className="display flex min-h-11 items-center gap-2.5 text-sm tracking-[0.12em]">
             <Logo />
             Kistebunden

@@ -259,12 +259,28 @@ body::before {
 }
 
 :root {
-  --top-nav: 0px;
+  --top-nav: calc(56px + env(safe-area-inset-top, 0px));
+  --status-band: var(--bg);
 }
 @media (min-width: 768px) {
   :root {
-    --top-nav: 64px;
+    --top-nav: calc(64px + env(safe-area-inset-top, 0px));
   }
+}
+/* Telefonens statuslinje har hvid tekst, når siden er lagt på hjemmeskærmen. I lyst tema får den en mørk baggrund. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --status-band: #0b1026;
+  }
+}
+:root[data-theme="light"] {
+  --status-band: #0b1026;
+}
+.status-band {
+  position: absolute;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  background: var(--status-band);
 }
 
 /* ───────────── Hvad nu hvis ───────────── */

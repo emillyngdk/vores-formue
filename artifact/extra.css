@@ -13,9 +13,9 @@ body {
     padding-right: max(24px, env(safe-area-inset-right, 0px));
   }
 }
-/* Fastgjorte bjælker starter under telefonens statuslinje */
+/* Fastgjorte bjælker starter under telefonens statuslinje. Rammen om artifacten giver selv plads til den. */
 :root {
-  --top-nav: env(safe-area-inset-top, 0px);
+  --top-nav: calc(56px + env(safe-area-inset-top, 0px));
 }
 @media (min-width: 768px) {
   :root {
@@ -25,6 +25,12 @@ body {
 .sticky.top-0,
 header.glass {
   top: env(safe-area-inset-top, 0px);
+}
+header.glass {
+  padding-top: 0 !important;
+}
+.status-band {
+  display: none;
 }
 body::after {
   content: "";
