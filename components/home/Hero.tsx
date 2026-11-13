@@ -19,49 +19,58 @@ export function Hero() {
   const then = parts(end);
   const scale = Math.max(...then, ...parts(planEnd), 1);
 
+  const growth = end.wealthWithPension - first.wealthWithPension;
+  const yearly = (end.wealthWithPension / first.wealthWithPension) ** (1 / (sim.rows.length - 1)) - 1;
+
   return (
     <section aria-labelledby="hero-title" className="hero-glow">
       <div className="mx-auto max-w-[1280px] px-4 pb-10 pt-6 sm:px-6 sm:pb-16 sm:pt-12">
-        <div className="grid grid-cols-1 items-end gap-x-12 gap-y-5 xl:grid-cols-[1fr_auto]">
-          <div className="min-w-0">
-            <p className="eyebrow">Emil og Frederikke · tal pr. oktober 2026</p>
-            <h1 id="hero-title" className="display mt-2 text-[clamp(1.9rem,8.6vw,4.25rem)]">
-              På kistebunden
-            </h1>
+        <p className="eyebrow">Emil og Frederikke · tal pr. oktober 2026</p>
+        <h1 id="hero-title" className="display mt-3 text-[clamp(2rem,8.6vw,5.25rem)] leading-[1.06]">
+          På kistebunden
+        </h1>
+
+        {/* Tre tal på én linje: i dag, 2035 og væksten imellem */}
+        <dl className="mt-6 grid grid-cols-2 border-y border-line sm:mt-8 sm:grid-cols-3">
+          <div className="min-w-0 py-4 pr-4 sm:py-5 sm:pr-6">
+            <dt className="eyebrow">I dag</dt>
+            <dd className="mt-1.5 text-[clamp(1.3rem,5.4vw,2.6rem)] leading-none">
+              <Ticker value={first.wealthWithPension} countUp />
+            </dd>
+            <dd className="mt-1.5 text-xs text-muted sm:text-sm">
+              uden pension <Ticker value={first.wealth} className="text-ink" />
+            </dd>
+            <dd className="mt-2 h-6" aria-live="polite">
+              {changed && Math.abs(deltaNow) >= 500 && <Delta v={deltaNow} suffix="mod planen" />}
+            </dd>
           </div>
+          <div className="min-w-0 border-l border-line py-4 pl-4 sm:px-6 sm:py-5">
+            <dt className="eyebrow" style={{ color: "var(--accent-text)" }}>
+              Oktober 2035
+            </dt>
+            <dd className="mt-1.5 text-[clamp(1.3rem,5.4vw,2.6rem)] leading-none" style={{ color: "var(--accent-text)" }}>
+              <Ticker value={end.wealthWithPension} countUp />
+            </dd>
+            <dd className="mt-1.5 text-xs text-muted sm:text-sm">
+              uden pension <Ticker value={end.wealth} className="text-ink" />
+            </dd>
+            <dd className="mt-2 h-6" aria-live="polite">
+              {changed && <Delta v={delta} suffix="mod planen" />}
+            </dd>
+          </div>
+          <div className="col-span-2 min-w-0 border-t border-line py-4 sm:col-span-1 sm:border-l sm:border-t-0 sm:py-5 sm:pl-6">
+            <dt className="eyebrow">Vækst frem til 2035</dt>
+            <dd className="mt-1.5 text-[clamp(1.3rem,5.4vw,2.6rem)] leading-none" style={{ color: "var(--mint)" }}>
+              <Ticker value={growth} kind="signedKr" />
+            </dd>
+            <dd className="mt-1.5 text-xs text-muted sm:text-sm">
+              ca. <Ticker value={yearly} kind="pct" className="text-ink" /> om året, med pension
+            </dd>
+            <dd className="mt-2 hidden h-6 sm:block" aria-hidden />
+          </div>
+        </dl>
 
-          <dl className="grid min-w-0 grid-cols-2 gap-x-4 sm:max-w-2xl xl:max-w-none xl:gap-x-14 xl:pb-2">
-              <div className="min-w-0">
-                <dt className="eyebrow">I dag</dt>
-                <dd className="mt-1 text-[clamp(1.2rem,5.6vw,2.75rem)] leading-none">
-                  <Ticker value={first.wealthWithPension} countUp />
-                </dd>
-                <dd className="mt-1.5 text-xs text-muted sm:text-sm">
-                  uden pension <Ticker value={first.wealth} className="text-ink" />
-                </dd>
-                <dd className="mt-2 h-6" aria-live="polite">
-                  {changed && Math.abs(deltaNow) >= 500 && <Delta v={deltaNow} suffix="mod planen" />}
-                </dd>
-              </div>
-              <div className="min-w-0">
-                <dt className="eyebrow" style={{ color: "var(--accent-text)" }}>
-                  Oktober 2035
-                </dt>
-                <dd className="mt-1 text-[clamp(1.2rem,5.6vw,2.75rem)] leading-none" style={{ color: "var(--accent-text)" }}>
-                  <Ticker value={end.wealthWithPension} countUp />
-                </dd>
-                <dd className="mt-1.5 text-xs text-muted sm:text-sm">
-                  uden pension <Ticker value={end.wealth} className="text-ink" />
-                </dd>
-                {/* Pladsen er der altid, så siden ikke hopper, når noget ændres */}
-                <dd className="mt-2 h-6" aria-live="polite">
-                  {changed && <Delta v={delta} suffix="mod planen" />}
-                </dd>
-              </div>
-          </dl>
-        </div>
-
-        <div className="mt-5 min-w-0 lg:mt-8">
+        <div className="mt-6 min-w-0 sm:mt-8">
           <WealthLine />
         </div>
 

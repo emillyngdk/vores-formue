@@ -3,7 +3,7 @@
  * Månedlig simulering fra oktober 2026 (måned 0) til oktober 2035 (måned 108).
  * Status gemmes hver oktober. Alle tal i DKK, nominelt.
  */
-import { loans, monthlyFlow, plan, snapshot, taxRules2026 } from "@/data/household";
+import { loans, monthlyFlow, people, plan, snapshot, taxRules2026 } from "@/data/household";
 
 export const START_YEAR = 2026;
 export const YEARS = 9;
@@ -31,43 +31,94 @@ export const loanPayment = (amount: number, rate: number, years: number) => {
 };
 
 export interface ScenarioParams {
+  // Afkast og boligpriser
   stockReturn: number; // aktieafkast p.a.
   pensionReturn: number; // pensionsafkast p.a.
+  apartmentGrowth: number; // lejlighedens prisudvikling p.a. frem til salget (0 i basis)
   houseGrowth: number; // husprisvækst p.a. efter købet
-  apartmentSalePrice: number; // lejlighedens værdi, både i dag og ved salget
+  // Bolighandlen
+  apartmentValue: number; // lejlighedens værdi i dag
   housePrice: number;
   saleMonth: number; // måneder efter oktober 2026 (24 = oktober 2028)
+  downPaymentPct: number; // udbetaling på huset
+  salaer: number;
+  purchaseCosts: number;
+  movingCosts: number;
+  cashAfterSale: number; // pr. person på egen konto efter salget, resten i aktier
+  // Lån og renter
+  newLoanRate: number; // nyt realkreditlån på huset, rente og bidrag p.a.
+  prioRate: number; // prioritetslånet
+  kontoRate: number; // rente på PrioritetsKontoen
+  energiRate: number;
+  suRate: number;
+  // Løn og opsparing
+  salaryGrowth: number; // p.a., løfter pension og Nordnet-opsparing i samme takt (0 i basis)
   nordnetEmil: number;
   nordnetFrederikke: number;
-  nordnetCutAfterMove: number; // pr. person pr. måned
-  salaryGrowth: number; // p.a., løfter pension og Nordnet-opsparing i samme takt (0 i basis)
-  suToNordnet: boolean; // Frederikkes 1.257 kr. til Nordnet, når SU-lånet er betalt
+  nordnetCutAfterMove: number; // pr. person pr. måned ved planens hus og rente. Justeres selv for husets pris, udbetaling og rente.
   askShare: number; // andel af månedsopsparingen, der går på aktiesparekonto (0–1), til loftet er nået
+  suToNordnet: boolean; // Frederikkes 1.257 kr. til Nordnet, når SU-lånet er betalt
+  // Pension pr. måned
+  pensionEmil: number;
+  pensionFrederikke: number;
+  // Skat
+  taxLow: number;
+  taxHigh: number;
+  taxThreshold: number;
+  askRate: number;
   events?: PlanEvent[];
 }
-
-/** Rente på det nye realkreditlån pr. måned, og hvad det betyder for Nordnet-opsparingen efter flytningen */
-export const housingCostMonthly = (housePrice: number) => (housePrice * (1 - plan.downPaymentPct) * plan.newRealkreditRate) / 12;
-export const nordnetCutFor = (housePrice: number) =>
-  Math.max(0, Math.round(plan.nordnetCutAfterMove + (housingCostMonthly(housePrice) - housingCostMonthly(plan.housePrice)) / 2));
 
 export const BASE: ScenarioParams = {
   stockReturn: 0.07,
   pensionReturn: 0.04,
+  apartmentGrowth: 0,
   houseGrowth: 0.035,
-  apartmentSalePrice: plan.apartmentSalePrice,
+  apartmentValue: plan.apartmentSalePrice,
   housePrice: plan.housePrice,
   saleMonth: plan.saleMonth,
+  downPaymentPct: plan.downPaymentPct,
+  salaer: plan.salaer,
+  purchaseCosts: plan.purchaseCosts,
+  movingCosts: plan.movingCosts,
+  cashAfterSale: plan.cashPerPersonAfterSale,
+  newLoanRate: plan.newRealkreditRate,
+  prioRate: loans.prioritetslaan.rate,
+  kontoRate: loans.prioritetslaan.kontoRate,
+  energiRate: loans.energilaan.rate,
+  suRate: loans.suLoan.rate,
+  salaryGrowth: 0,
   nordnetEmil: monthlyFlow.nordnet.emil,
   nordnetFrederikke: monthlyFlow.nordnet.frederikke,
   nordnetCutAfterMove: plan.nordnetCutAfterMove,
-  salaryGrowth: 0,
-  suToNordnet: false,
   askShare: 0,
+  suToNordnet: false,
+  pensionEmil: people.emil.pensionMonthly,
+  pensionFrederikke: people.frederikke.pensionMonthly,
+  taxLow: taxRules2026.shareIncome.low,
+  taxHigh: taxRules2026.shareIncome.high,
+  taxThreshold: taxRules2026.shareIncome.threshold,
+  askRate: taxRules2026.aktiesparekonto.rate,
 };
 
+/** Rente og bidrag på det nye realkreditlån pr. måned */
+export const housingCostMonthly = (housePrice: number, downPaymentPct = BASE.downPaymentPct, rate = BASE.newLoanRate) =>
+  (housePrice * (1 - downPaymentPct) * rate) / 12;
+
+/**
+ * Hvor meget hver af os sætter mindre i Nordnet efter flytningen.
+ * Planens 1.300 kr. gælder planens hus og rente. Et dyrere lån koster mere om måneden, og forskellen deles mellem os.
+ * Bliver tallet negativt, er huset billigere end planen, og vi kan sætte mere ind.
+ */
+export const effectiveCut = (p: ScenarioParams) =>
+  Math.round(p.nordnetCutAfterMove + (housingCostMonthly(p.housePrice, p.downPaymentPct, p.newLoanRate) - housingCostMonthly(BASE.housePrice)) / 2);
+
+/** Ekstra udgift pr. måned på prioritetslånet i forhold til planens renter (negativ = billigere) */
+export const prioExtraMonthly = (p: ScenarioParams, principal: number, konto: number) =>
+  (principal * (p.prioRate - BASE.prioRate) - konto * (p.kontoRate - BASE.kontoRate)) / 12;
+
 export const PRESETS = {
-  forsigtig: { ...BASE, apartmentSalePrice: 6_750_000, houseGrowth: 0.015, stockReturn: 0.05, pensionReturn: 0.03 },
+  forsigtig: { ...BASE, apartmentValue: 6_750_000, houseGrowth: 0.015, stockReturn: 0.05, pensionReturn: 0.03 },
   basis: { ...BASE },
   god: { ...BASE, houseGrowth: 0.045, stockReturn: 0.09, pensionReturn: 0.05 },
 } satisfies Record<string, ScenarioParams>;
@@ -80,11 +131,12 @@ export const WITHOUT_EXTRA: ScenarioParams = {
   nordnetCutAfterMove: 0,
 };
 
+type TaxRules = Pick<ScenarioParams, "taxLow" | "taxHigh" | "taxThreshold">;
+
 /** Skat på aktiegevinst, som hvis alt blev solgt. Pr. person. */
-export function shareTax(value: number, basis: number): number {
-  const { low, high, threshold } = taxRules2026.shareIncome;
+export function shareTax(value: number, basis: number, r: TaxRules = BASE): number {
   const gain = Math.max(value - basis, 0);
-  return Math.min(gain, threshold) * low + Math.max(gain - threshold, 0) * high;
+  return Math.min(gain, r.taxThreshold) * r.taxLow + Math.max(gain - r.taxThreshold, 0) * r.taxHigh;
 }
 
 const FLOW_KEYS = [
@@ -94,7 +146,7 @@ const FLOW_KEYS = [
   "emilPensionIn", "frederikkePensionIn",
   "emilPensionReturn", "frederikkePensionReturn",
   "houseGrowth", "energilaanPaid", "suPaid", "prioritetsKontoIn", "housingTransaction", "askTax",
-  "eventsOut", "eventsTax",
+  "eventsOut", "eventsTax", "otherCosts",
 ] as const;
 export type FlowKey = (typeof FLOW_KEYS)[number];
 export type Flows = Record<FlowKey, number>;
@@ -194,10 +246,12 @@ export function simulate(params: ScenarioParams = BASE): SimulationResult {
   const am = (1 + p.stockReturn) ** (1 / 12) - 1;
   const pm = (1 + p.pensionReturn) ** (1 / 12) - 1;
   const hm = (1 + p.houseGrowth) ** (1 / 12);
+  const apm = (1 + p.apartmentGrowth) ** (1 / 12);
+  const cut = effectiveCut(p);
 
   const s = {
     // Lejligheden er det værd, vi regner med at sælge den for. Så følger formuen i dag med, når prisen ændres.
-    home: p.apartmentSalePrice,
+    home: p.apartmentValue,
     rk: snapshot.shared.realkredit as number,
     prio: snapshot.shared.prioritetslaan as number,
     el: snapshot.shared.energilaan as number,
@@ -242,7 +296,7 @@ export function simulate(params: ScenarioParams = BASE): SimulationResult {
     if (want <= 0) return 0;
     const V = who === "e" ? s.ea : s.fa;
     const B = who === "e" ? s.eb : s.fb;
-    const full = V - shareTax(V, B);
+    const full = V - shareTax(V, B, p);
     let got = 0;
     if (V > 0) {
       let G = V;
@@ -251,7 +305,7 @@ export function simulate(params: ScenarioParams = BASE): SimulationResult {
         let hi = V;
         for (let i = 0; i < 50; i++) {
           const mid = (lo + hi) / 2;
-          const left = V - mid - shareTax(V - mid, B * (1 - mid / V));
+          const left = V - mid - shareTax(V - mid, B * (1 - mid / V), p);
           if (full - left < want) lo = mid;
           else hi = mid;
         }
@@ -301,7 +355,7 @@ export function simulate(params: ScenarioParams = BASE): SimulationResult {
   const person = (
     depot: number, basis: number, ask: number, cash: number, pension: number, su: number, equity: number, konto: number,
   ): PersonRow => {
-    const tax = shareTax(depot, basis);
+    const tax = shareTax(depot, basis, p);
     const net = depot - tax + ask;
     const wealth = equity / 2 + konto / 2 + net + cash - su;
     return {
@@ -312,7 +366,7 @@ export function simulate(params: ScenarioParams = BASE): SimulationResult {
 
   const snap = (year: number) => {
     const debt = s.rk + s.prio + s.el;
-    const salaer = s.house ? 0 : plan.salaer;
+    const salaer = s.house ? 0 : p.salaer;
     const equity = s.home - debt - salaer;
     const emil = person(s.ea, s.eb, s.eAsk, s.eCash, s.ep, 0, equity, s.konto);
     const frederikke = person(s.fa, s.fb, s.fAsk, s.fCash, s.fp, s.su, equity, s.konto);
@@ -345,10 +399,22 @@ export function simulate(params: ScenarioParams = BASE): SimulationResult {
     const salaryFactor = (1 + p.salaryGrowth) ** Math.floor((m - 1) / 12);
     let eIn = p.nordnetEmil;
     let fIn = p.nordnetFrederikke;
-    if (s.house) { eIn -= p.nordnetCutAfterMove; fIn -= p.nordnetCutAfterMove; }
+    if (s.house) { eIn -= cut; fIn -= cut; }
     eIn = Math.max(0, eIn) * salaryFactor;
     fIn = Math.max(0, fIn) * salaryFactor;
     if (p.suToNordnet && suPaidOffMonth !== null) fIn += loans.suLoan.monthly;
+    // Andre renter på prioritetslånet ændrer, hvad der er tilbage til Nordnet. Rækker opsparingen ikke, går resten fra kontiene.
+    if (!s.house && s.prio > 0 && (p.prioRate !== BASE.prioRate || p.kontoRate !== BASE.kontoRate)) {
+      const extra = prioExtraMonthly(p, s.prio, s.konto);
+      if (extra < 0) { eIn -= extra / 2; fIn -= extra / 2; }
+      else {
+        let left = extra;
+        const e1 = Math.min(eIn, left / 2); eIn -= e1; left -= e1;
+        const f1 = Math.min(fIn, left); fIn -= f1; left -= f1;
+        const e2 = Math.min(eIn, left); eIn -= e2; left -= e2;
+        if (left > 0.005) { s.eCash -= left / 2; s.fCash -= left / 2; add("otherCosts", -left); }
+      }
+    }
     // Ydelser på lån til engangskøb går fra månedsopsparingen, ligeligt fordelt
     for (const o of outcomes) {
       const start = eventMonth(o.year);
@@ -369,13 +435,13 @@ export function simulate(params: ScenarioParams = BASE): SimulationResult {
     s.ea += eIn - eAskIn; s.eb += eIn - eAskIn; s.fa += fIn - fAskIn; s.fb += fIn - fAskIn;
     add("emilStocksIn", eIn); add("frederikkeStocksIn", fIn);
 
-    const epIn = 7_313 * salaryFactor;
-    const fpIn = 9_018 * salaryFactor;
+    const epIn = p.pensionEmil * salaryFactor;
+    const fpIn = p.pensionFrederikke * salaryFactor;
     s.ep += epIn; s.fp += fpIn; add("emilPensionIn", epIn); add("frederikkePensionIn", fpIn);
 
     // 3. SU-lån
     if (s.su > 0) {
-      const next = Math.max(0, s.su * (1 + loans.suLoan.rate / 12) - loans.suLoan.monthly);
+      const next = Math.max(0, s.su * (1 + p.suRate / 12) - loans.suLoan.monthly);
       add("suPaid", s.su - next);
       s.su = next;
     }
@@ -387,30 +453,48 @@ export function simulate(params: ScenarioParams = BASE): SimulationResult {
       s.home = next;
     } else {
       // 4. Før salget
+      if (p.apartmentGrowth !== 0) {
+        const next = s.home * apm;
+        add("houseGrowth", next - s.home);
+        s.home = next;
+      }
       if (m === plan.prioritetsKontoTopUpMonth) { s.konto += plan.prioritetsKontoTopUp; add("prioritetsKontoIn", plan.prioritetsKontoTopUp); }
       if (s.el > 0) {
-        const next = Math.max(0, s.el * (1 + loans.energilaan.rate / 12) - loans.energilaan.monthly);
+        const next = Math.max(0, s.el * (1 + p.energiRate / 12) - loans.energilaan.monthly);
         add("energilaanPaid", s.el - next);
         s.el = next;
       }
       // 5. Salg og køb
       if (m === p.saleMonth) {
-        const net = p.apartmentSalePrice - plan.salaer - s.rk - s.prio - s.el + s.konto;
-        const downPayment = p.housePrice * plan.downPaymentPct;
-        const surplus = net - downPayment - plan.purchaseCosts - plan.movingCosts;
+        const salePrice = s.home;
+        const net = salePrice - p.salaer - s.rk - s.prio - s.el + s.konto;
+        const downPayment = p.housePrice * p.downPaymentPct;
+        const surplus = net - downPayment - p.purchaseCosts - p.movingCosts;
         const each = surplus / 2;
-        const toStocks = each - plan.cashPerPersonAfterSale;
+        const toStocks = each - p.cashAfterSale;
         sale = {
-          salePrice: p.apartmentSalePrice, salaer: plan.salaer, realkredit: s.rk, prioritetslaan: s.prio,
-          energilaan: s.el, prioritetsKonto: s.konto, net, downPayment, purchaseCosts: plan.purchaseCosts,
-          movingCosts: plan.movingCosts, surplus, perPerson: each, cashPerPerson: plan.cashPerPersonAfterSale,
+          salePrice, salaer: p.salaer, realkredit: s.rk, prioritetslaan: s.prio,
+          energilaan: s.el, prioritetsKonto: s.konto, net, downPayment, purchaseCosts: p.purchaseCosts,
+          movingCosts: p.movingCosts, surplus, perPerson: each, cashPerPerson: p.cashAfterSale,
           stocksPerPerson: toStocks, newRealkredit: p.housePrice - downPayment, housePrice: p.housePrice,
         };
-        // Tabet ved handlen er salgsprisforskellen mod værdien + omkostningerne
-        add("housingTransaction", (p.apartmentSalePrice - s.home) - plan.purchaseCosts - plan.movingCosts);
-        s.eCash += plan.cashPerPersonAfterSale; s.fCash += plan.cashPerPersonAfterSale;
-        s.ea += toStocks; s.eb += toStocks; s.fa += toStocks; s.fb += toStocks;
-        add("emilStocksFromSale", toStocks); add("frederikkeStocksFromSale", toStocks);
+        // Tabet ved handlen er omkostningerne. Lejligheden sælges til det, den er værd.
+        add("housingTransaction", (salePrice - s.home) - p.purchaseCosts - p.movingCosts);
+        s.eCash += p.cashAfterSale; s.fCash += p.cashAfterSale;
+        // Mangler der penge, tages de fra depotet. Er det ikke nok, går resten fra kontoen.
+        const toDepot = (v: number, who: "e" | "f") => {
+          const V = who === "e" ? s.ea : s.fa;
+          const B = who === "e" ? s.eb : s.fb;
+          let use = v;
+          if (V + use < 0) {
+            if (who === "e") s.eCash += V + use; else s.fCash += V + use;
+            use = -V;
+          }
+          if (who === "e") { s.ea = V + use; s.eb = Math.max(0, B + use); } else { s.fa = V + use; s.fb = Math.max(0, B + use); }
+          add(who === "e" ? "emilStocksFromSale" : "frederikkeStocksFromSale", use);
+        };
+        toDepot(toStocks, "e");
+        toDepot(toStocks, "f");
         s.home = p.housePrice; s.rk = p.housePrice - downPayment;
         s.prio = 0; s.el = 0; s.konto = 0; s.house = true;
       }
@@ -431,7 +515,7 @@ export function simulate(params: ScenarioParams = BASE): SimulationResult {
     if (s.su === 0 && suPaidOffMonth === null) suPaidOffMonth = m;
     if (m % 12 === 0) {
       // Lagerbeskatning på aktiesparekontoen: 17 % af årets afkast, trukket fra kontoen
-      const rate = taxRules2026.aktiesparekonto.rate;
+      const rate = p.askRate;
       const eTaxable = s.eAsk - s.eAskRef - s.eAskLoss;
       if (eTaxable > 0) { const t = eTaxable * rate; s.eAsk -= t; add("askTax", -t); s.eAskLoss = 0; } else s.eAskLoss = -eTaxable;
       s.eAskRef = s.eAsk;
@@ -464,6 +548,7 @@ export function growthBreakdown(result: SimulationResult) {
     prioritetsKontoIn: t.prioritetsKontoIn,
     housingTransaction: t.housingTransaction,
     events: t.eventsOut,
+    otherCosts: t.otherCosts,
   };
   const sum = Object.values(parts).reduce((x, y) => x + y, 0);
   return { start: first.wealthWithPension, end: last.wealthWithPension, total: last.wealthWithPension - first.wealthWithPension, parts, sum };
@@ -471,7 +556,7 @@ export function growthBreakdown(result: SimulationResult) {
 
 export const SENSITIVITIES: { label: string; params: Partial<ScenarioParams> }[] = [
   { label: "Huspriser stiger 1 % (ikke 3,5 %)", params: { houseGrowth: 0.01 } },
-  { label: "Lejligheden sælges for 6,5 mio.", params: { apartmentSalePrice: 6_500_000 } },
+  { label: "Lejligheden er 6,5 mio. værd", params: { apartmentValue: 6_500_000 } },
   { label: "Aktier giver 4 % (ikke 7 %)", params: { stockReturn: 0.04 } },
   { label: "Pension giver 2 % (ikke 4 %)", params: { pensionReturn: 0.02 } },
   { label: "Aktier giver 10 %", params: { stockReturn: 0.1 } },

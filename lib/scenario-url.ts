@@ -1,19 +1,25 @@
-import { BASE, EVENT_YEARS, type EventPay, type PlanEvent, type ScenarioParams } from "@/lib/engine";
+import { BASE, EVENT_YEARS, type EventPay, type PlanEvent, type ScenarioParams, housingCostMonthly } from "@/lib/engine";
 
 type Key = Exclude<keyof ScenarioParams, "events">;
 
 /** Korte nøgler, så et scenarie kan ligge i en URL: /lab?sr=0.09&sp=7350000 */
 const KEYS: Record<Key, string> = {
-  stockReturn: "sr", pensionReturn: "pr", houseGrowth: "hg", apartmentSalePrice: "sp", housePrice: "hp",
-  saleMonth: "sm", nordnetEmil: "ne", nordnetFrederikke: "nf", nordnetCutAfterMove: "nc", salaryGrowth: "sg",
-  suToNordnet: "su", askShare: "as",
+  stockReturn: "sr", pensionReturn: "pr", apartmentGrowth: "ag", houseGrowth: "hg",
+  apartmentValue: "sp", housePrice: "hp", saleMonth: "sm", downPaymentPct: "dp", salaer: "sa", purchaseCosts: "pc", movingCosts: "mc", cashAfterSale: "ca",
+  newLoanRate: "nr", prioRate: "rp", kontoRate: "rk", energiRate: "re", suRate: "rs",
+  salaryGrowth: "sg", nordnetEmil: "ne", nordnetFrederikke: "nf", nordnetCutAfterMove: "nb", askShare: "as", suToNordnet: "su",
+  pensionEmil: "pe", pensionFrederikke: "pf",
+  taxLow: "tl", taxHigh: "th", taxThreshold: "tt", askRate: "ar",
 };
 
-const LIMITS: Record<Exclude<Key, "suToNordnet">, [number, number]> = {
-  stockReturn: [-0.05, 0.2], pensionReturn: [-0.05, 0.15], houseGrowth: [-0.05, 0.15],
-  apartmentSalePrice: [4_000_000, 12_000_000], housePrice: [3_000_000, 12_000_000], saleMonth: [12, 48],
-  nordnetEmil: [0, 30_000], nordnetFrederikke: [0, 30_000], nordnetCutAfterMove: [0, 10_000],
-  salaryGrowth: [0, 0.1], askShare: [0, 1],
+export const LIMITS: Record<Exclude<Key, "suToNordnet">, [number, number]> = {
+  stockReturn: [-0.05, 0.2], pensionReturn: [-0.05, 0.15], apartmentGrowth: [-0.1, 0.2], houseGrowth: [-0.05, 0.15],
+  apartmentValue: [3_000_000, 12_000_000], housePrice: [3_000_000, 12_000_000], saleMonth: [12, 48],
+  downPaymentPct: [0.05, 0.8], salaer: [0, 300_000], purchaseCosts: [0, 500_000], movingCosts: [0, 300_000], cashAfterSale: [0, 1_000_000],
+  newLoanRate: [0, 0.12], prioRate: [0, 0.15], kontoRate: [0, 0.12], energiRate: [0, 0.12], suRate: [0, 0.1],
+  salaryGrowth: [0, 0.1], nordnetEmil: [0, 30_000], nordnetFrederikke: [0, 30_000], nordnetCutAfterMove: [-10_000, 10_000], askShare: [0, 1],
+  pensionEmil: [0, 40_000], pensionFrederikke: [0, 40_000],
+  taxLow: [0, 0.6], taxHigh: [0, 0.7], taxThreshold: [0, 500_000], askRate: [0, 0.5],
 };
 
 /** Holder alle værdier inden for fornuftige grænser. Bruges også på input fra assistenten. */
@@ -85,6 +91,12 @@ export function decodeScenario(search: string): ScenarioParams {
   }
   const ev = q.get("ev");
   if (ev) partial.events = decodeEvents(ev);
+  // Ældre adresser og gemte planer: "nc" var Nordnet-nedskæringen inklusive tillægget for husets pris
+  const legacy = q.get("nc");
+  if (legacy !== null && q.get("nb") === null) {
+    const hp = partial.housePrice ?? BASE.housePrice;
+    partial.nordnetCutAfterMove = Number(legacy) - Math.round((housingCostMonthly(hp) - housingCostMonthly(BASE.housePrice)) / 2);
+  }
   return sanitize(partial);
 }
 

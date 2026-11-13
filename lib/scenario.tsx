@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useDeferredValue, useMemo, useState } from "react";
-import { BASE, type PlanEvent, type ScenarioParams, type SimulationResult, growthBreakdown, nordnetCutFor, simulate } from "@/lib/engine";
+import { BASE, type PlanEvent, type ScenarioParams, type SimulationResult, growthBreakdown, simulate } from "@/lib/engine";
 import { useLocalStorage } from "@/lib/hooks";
 import { decodeScenario, encodeScenario } from "@/lib/scenario-url";
 
@@ -69,8 +69,8 @@ export function ScenarioProvider({ children }: { children: React.ReactNode }) {
       deltaNow: sim.rows[0].wealthWithPension - planSim.rows[0].wealthWithPension,
       setDraft,
       set: (k, v) => edit((p) => ({ ...p, [k]: v })),
-      // Et dyrere hus koster mere i rente hver måned. Det tages fra Nordnet-opsparingen.
-      setHousePrice: (v) => edit((p) => ({ ...p, housePrice: v, nordnetCutAfterMove: nordnetCutFor(v) })),
+      // Et dyrere hus koster mere i rente hver måned. Det regner motoren selv ind i Nordnet-opsparingen.
+      setHousePrice: (v) => edit((p) => ({ ...p, housePrice: v })),
       reset: () => setOwn(null),
       savePlan: () => {
         setPlanQ(encodeScenario(draft));

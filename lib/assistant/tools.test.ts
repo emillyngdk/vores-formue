@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { BASE } from "@/lib/engine";
+import { BASE, effectiveCut } from "@/lib/engine";
 import { decodeScenario } from "@/lib/scenario-url";
 import { explainTerm } from "./glossary";
 import { buildSystemPrompt } from "./system";
@@ -9,7 +9,7 @@ describe("assistentens værktøjer", () => {
   it("oversætter et scenarie i procenter og kroner", () => {
     const p = toParams({ aktieafkast_pct: 4, salgspris_lejlighed: 7_400_000, huspris: 6_900_000, salgsaar: 2029, su_til_nordnet: true });
     expect(p.stockReturn).toBeCloseTo(0.04);
-    expect(p.apartmentSalePrice).toBe(7_400_000);
+    expect(p.apartmentValue).toBe(7_400_000);
     expect(p.housePrice).toBe(6_900_000);
     expect(p.saleMonth).toBe(36);
     expect(p.suToNordnet).toBe(true);
@@ -71,7 +71,8 @@ describe("engangskøb fra assistenten", () => {
     expect(out.card?.query).toContain("ev=");
   });
   it("et dyrere hus trækker mere fra Nordnet", () => {
-    expect(toParams({ huspris: 7_500_000 }).nordnetCutAfterMove).toBeGreaterThan(2_500);
-    expect(toParams({}).nordnetCutAfterMove).toBe(1_300);
+    expect(effectiveCut(toParams({ huspris: 7_500_000 }))).toBeGreaterThan(2_500);
+    expect(effectiveCut(toParams({}))).toBe(1_300);
+    expect(effectiveCut(toParams({ rente_nyt_realkreditlaan_pct: 5 }))).toBeGreaterThan(1_300);
   });
 });

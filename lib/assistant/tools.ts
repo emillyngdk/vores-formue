@@ -1,5 +1,5 @@
 import { baseRows } from "@/lib/base";
-import { BASE, type ScenarioParams, type SimulationResult, nordnetCutFor, simulate } from "@/lib/engine";
+import { BASE, type ScenarioParams, type SimulationResult, effectiveCut, simulate } from "@/lib/engine";
 import { encodeScenario, sanitize } from "@/lib/scenario-url";
 import { explainTerm } from "./glossary";
 
@@ -16,6 +16,12 @@ export interface ScenarioInput {
   loenstigning_pct?: number;
   su_til_nordnet?: boolean;
   andel_aktiesparekonto_pct?: number;
+  lejlighed_prisudvikling_pct?: number;
+  udbetaling_pct?: number;
+  rente_nyt_realkreditlaan_pct?: number;
+  rente_prioritetslaan_pct?: number;
+  pension_emil?: number;
+  pension_frederikke?: number;
   engangskoeb?: { navn?: string; pris?: number; aar?: number; betaling?: string; loebetid_aar?: number; rente_pct?: number }[];
 }
 
@@ -42,10 +48,14 @@ export function toParams(input: unknown): ScenarioParams {
     stockReturn: pctOf(s.aktieafkast_pct),
     pensionReturn: pctOf(s.pensionsafkast_pct),
     houseGrowth: pctOf(s.husprisvaekst_pct),
-    apartmentSalePrice: num(s.salgspris_lejlighed),
+    apartmentValue: num(s.salgspris_lejlighed),
     housePrice,
-    // Et dyrere hus koster mere i rente, og det trækkes fra Nordnet efter flytningen
-    nordnetCutAfterMove: housePrice === undefined ? undefined : nordnetCutFor(housePrice),
+    apartmentGrowth: pctOf(s.lejlighed_prisudvikling_pct),
+    downPaymentPct: pctOf(s.udbetaling_pct),
+    newLoanRate: pctOf(s.rente_nyt_realkreditlaan_pct),
+    prioRate: pctOf(s.rente_prioritetslaan_pct),
+    pensionEmil: num(s.pension_emil),
+    pensionFrederikke: num(s.pension_frederikke),
     events,
     saleMonth: year === undefined ? undefined : (year - 2026) * 12,
     nordnetEmil: num(s.nordnet_emil),
@@ -76,7 +86,7 @@ function describe(p: ScenarioParams) {
     aktieafkast_pct: +(p.stockReturn * 100).toFixed(2),
     pensionsafkast_pct: +(p.pensionReturn * 100).toFixed(2),
     husprisvaekst_pct: +(p.houseGrowth * 100).toFixed(2),
-    salgspris_lejlighed: p.apartmentSalePrice,
+    salgspris_lejlighed: p.apartmentValue,
     huspris: p.housePrice,
     salgsaar: 2026 + p.saleMonth / 12,
     nordnet_emil: p.nordnetEmil,
@@ -84,7 +94,13 @@ function describe(p: ScenarioParams) {
     loenstigning_pct: +(p.salaryGrowth * 100).toFixed(2),
     su_til_nordnet: p.suToNordnet,
     andel_aktiesparekonto_pct: +(p.askShare * 100).toFixed(0),
-    nordnet_ned_efter_flytning_pr_person: p.nordnetCutAfterMove,
+    lejlighed_prisudvikling_pct: +(p.apartmentGrowth * 100).toFixed(2),
+    udbetaling_pct: +(p.downPaymentPct * 100).toFixed(1),
+    rente_nyt_realkreditlaan_pct: +(p.newLoanRate * 100).toFixed(2),
+    rente_prioritetslaan_pct: +(p.prioRate * 100).toFixed(2),
+    pension_emil: p.pensionEmil,
+    pension_frederikke: p.pensionFrederikke,
+    nordnet_ned_efter_flytning_pr_person: effectiveCut(p),
     engangskoeb: (p.events ?? []).map((e) => ({ navn: e.label, pris: e.amount, aar: e.year, betaling: e.pay, loebetid_aar: e.loanYears, rente_pct: +(e.loanRate * 100).toFixed(2) })),
   };
 }
@@ -125,7 +141,13 @@ const scenarioSchema = {
     aktieafkast_pct: { type: "number", description: "Aktieafkast pr. år i procent. Basis 7." },
     pensionsafkast_pct: { type: "number", description: "Pensionsafkast pr. år i procent. Basis 4." },
     husprisvaekst_pct: { type: "number", description: "Husets værdistigning pr. år i procent efter købet. Basis 3,5." },
-    salgspris_lejlighed: { type: "number", description: "Lejlighedens værdi i kr. Bruges både som værdien i dag og som salgsprisen. Basis 7000000." },
+    salgspris_lejlighed: { type: "number", description: "Lejlighedens værdi i dag i kr. Basis 7000000. Salgsprisen er værdien ved salget." },
+    lejlighed_prisudvikling_pct: { type: "number", description: "Lejlighedens prisudvikling pr. år frem til salget, i procent. Basis 0." },
+    udbetaling_pct: { type: "number", description: "Udbetaling på huset i procent. Basis 20." },
+    rente_nyt_realkreditlaan_pct: { type: "number", description: "Rente og bidrag på det nye realkreditlån på huset, i procent. Basis 3,77. Højere rente betyder mindre til Nordnet efter flytningen." },
+    rente_prioritetslaan_pct: { type: "number", description: "Renten på prioritetslånet i procent frem til salget. Basis 4,77." },
+    pension_emil: { type: "number", description: "Emils pensionsindbetaling pr. måned i kr. Basis 7313." },
+    pension_frederikke: { type: "number", description: "Frederikkes pensionsindbetaling pr. måned i kr. Basis 9018." },
     huspris: { type: "number", description: "Husets pris i kr. Basis 6500000. Udbetalingen er 20 %." },
     salgsaar: { type: "integer", description: "Året hvor lejligheden sælges og huset købes (oktober). 2027 til 2030. Basis 2028." },
     nordnet_emil: { type: "number", description: "Emils månedlige indbetaling til Nordnet i kr. Basis 6000." },

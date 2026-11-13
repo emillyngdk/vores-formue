@@ -6,12 +6,12 @@ import { Chapter } from "@/components/ui/Chapter";
 import { Ticker } from "@/components/ui/Ticker";
 import { type Step, Waterfall } from "@/components/ui/Waterfall";
 import { plan } from "@/data/household";
-import { type SaleEvent, housingCostMonthly } from "@/lib/engine";
+import { type SaleEvent, effectiveCut, housingCostMonthly } from "@/lib/engine";
 import { kr, mioTal } from "@/lib/format";
 import { usePrefersReducedMotion } from "@/lib/hooks";
 import { useScenarioCalm } from "@/lib/scenario";
 
-function steps(s: SaleEvent): Step[] {
+function steps(s: SaleEvent, pct: number): Step[] {
   return [
     { label: "Salgspris", value: s.salePrice, kind: "total", color: "var(--mint)" },
     { label: "Salær til mægler", value: -s.salaer, kind: "delta" },
@@ -20,7 +20,7 @@ function steps(s: SaleEvent): Step[] {
     { label: "Energilån", value: -s.energilaan, kind: "delta" },
     { label: "PrioritetsKonto", value: s.prioritetsKonto, kind: "delta" },
     { label: "Nettoprovenu", value: s.net, kind: "total" },
-    { label: "Udbetaling på huset (20 %)", value: -s.downPayment, kind: "delta" },
+    { label: `Udbetaling på huset (${pct} %)`, value: -s.downPayment, kind: "delta" },
     { label: "Købsomkostninger og flytning", value: -(s.purchaseCosts + s.movingCosts), kind: "delta" },
     { label: s.surplus < 0 ? "Mangler, tages fra aktierne" : "Overskud til investering", value: s.surplus, kind: "total", color: s.surplus < 0 ? "var(--coral)" : undefined },
   ];
@@ -51,7 +51,9 @@ export function Turning2028() {
   const s = sim.sale;
   if (!s) return null;
   const year = 2026 + draft.saleMonth / 12;
-  const cost = Math.round(housingCostMonthly(s.housePrice) / 100) * 100;
+  const pct = Math.round(draft.downPaymentPct * 100);
+  const cost = Math.round(housingCostMonthly(s.housePrice, draft.downPaymentPct, draft.newLoanRate) / 100) * 100;
+  const cut = effectiveCut(draft);
   const extra = plan.extraHousingCostMonthly + cost - plan.newHousingCostMonthly;
 
   return (
@@ -60,7 +62,7 @@ export function Turning2028() {
       no="03"
       kicker={`Oktober ${year}`}
       title="Vendepunktet"
-      intro={`Lejligheden sælges for ${mioTal(s.salePrice)} kr., og vi køber hus til ${mioTal(s.housePrice)} kr. med 20 % udbetaling og intet banklån.`}
+      intro={`Lejligheden sælges for ${mioTal(s.salePrice)} kr., og vi køber hus til ${mioTal(s.housePrice)} kr. med ${pct} % udbetaling og intet banklån.`}
     >
       <div className="grid gap-4 lg:grid-cols-[1.6fr_1fr]">
         <div className="card p-5 sm:p-8">
@@ -76,7 +78,7 @@ export function Turning2028() {
             </motion.div>
           </div>
           <div ref={ref}>
-            <Waterfall steps={steps(s)} progress={reduced ? undefined : progress} label="Fra salgspris til overskud" />
+            <Waterfall steps={steps(s, pct)} progress={reduced ? undefined : progress} label="Fra salgspris til overskud" />
           </div>
         </div>
 
@@ -96,8 +98,8 @@ export function Turning2028() {
             <p className="eyebrow" style={{ color: "var(--accent-text)" }}>{extra < 0 ? "Huset koster mindre om måneden" : "Huset koster mere om måneden"}</p>
             <p className="num mt-2 text-3xl">{extra < 0 ? "−" : "+"}{kr(Math.abs(extra))}</p>
             <p className="mt-3 text-sm text-muted">
-              Lånet på {kr(s.newRealkredit)} koster ca. {kr(cost)} om måneden i rente. Derfor skruer vi Nordnet ned med {kr(draft.nordnetCutAfterMove)} hver
-              efter flytningen.
+              Lånet på {kr(s.newRealkredit)} koster ca. {kr(cost)} om måneden i rente og bidrag.{" "}
+              {cut >= 0 ? `Derfor skruer vi Nordnet ned med ${kr(cut)} hver efter flytningen.` : `Derfor kan vi hver sætte ${kr(-cut)} mere i Nordnet efter flytningen.`}
             </p>
           </div>
         </div>

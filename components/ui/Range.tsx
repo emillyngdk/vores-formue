@@ -16,6 +16,8 @@ export function Range({
   display,
   hint,
   color = "var(--accent)",
+  nudge,
+  plan,
 }: {
   label: string;
   value: number;
@@ -26,6 +28,10 @@ export function Range({
   display: string;
   hint?: string;
   color?: string;
+  /** Hvor meget plus og minus flytter. Standard er `step`. */
+  nudge?: number;
+  /** Planens værdi. Er værdien ændret, vises planens værdi og en knap tilbage til den. */
+  plan?: { value: number; display: string; onReset: () => void };
 }) {
   const id = useId();
   const fill = ((value - min) / (max - min)) * 100;
@@ -42,7 +48,7 @@ export function Range({
   useEffect(() => stop, []);
 
   const stepBy = (dir: number) => {
-    const next = Math.min(max, Math.max(min, +(Math.round((latest.current + dir * step) / step) * step).toFixed(6)));
+    const next = Math.min(max, Math.max(min, +(Math.round((latest.current + dir * (nudge ?? step)) / step) * step).toFixed(6)));
     if (next === latest.current) return stop();
     latest.current = next;
     change.current(next);
@@ -101,6 +107,14 @@ export function Range({
         onChange={(e) => onChange(Number(e.target.value))}
         style={{ "--fill": `${fill}%`, "--range-color": color } as React.CSSProperties}
       />
+      {plan && Math.abs(plan.value - value) > step / 2 && (
+        <p className="mt-0.5 flex flex-wrap items-center gap-x-2 text-xs text-muted">
+          Planen: <span className="num font-semibold text-ink">{plan.display}</span>
+          <button type="button" onClick={plan.onReset} className="-my-2 min-h-11 px-1 font-semibold underline underline-offset-4" style={{ color: "var(--accent-text)" }}>
+            Tilbage til planen
+          </button>
+        </p>
+      )}
       {hint && <p className="mt-1 text-xs text-muted">{hint}</p>}
     </div>
   );

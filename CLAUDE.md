@@ -22,6 +22,7 @@ Statiske tekster med tal: `peers` i `data/household.ts` (sammenligningen med jæ
 - `data/household.ts`: alle tal.
 - `lib/engine/`: regnemotoren (`simulate`, engangskøb, `growthBreakdown`).
 - `lib/scenario.tsx`: planen og det, man leger med på forsiden ("Hvad nu hvis").
+- `lib/variables.ts`: alle variabler i lab'et (navn, interval, format). En ny variabel skal både i `ScenarioParams` og `BASE` i motoren, i `KEYS` og `LIMITS` i `lib/scenario-url.ts` og her. Planens værdier hentes fra `data/household.ts`.
 - `components/home/`: forsiden. `components/whatif/`: bjælken og skuffen. `components/lab/`, `components/ask/`: lab og Spørg Claude.
 - `design/ikon.mjs`: tegner app-ikonerne (kisten). Køres kun, når ikonet ændres.
 - `artifact/`: bygger den udgave, der kan vises som artifact i Claude (`npm run artifact`).

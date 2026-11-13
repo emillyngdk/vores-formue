@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
+import type { ScenarioParams } from "./index";
 import {
-  BASE, PRESETS, WITHOUT_EXTRA, askVsDepot, growthBreakdown, last, nordnetCutFor, prioritetslaanCost, rowFor, sensitivity, shareTax, simulate,
+  BASE, PRESETS, WITHOUT_EXTRA, askVsDepot, growthBreakdown, last, effectiveCut, prioritetslaanCost, rowFor, sensitivity, shareTax, simulate,
 } from "./index";
 import { decodeScenario, encodeScenario, sanitize } from "../scenario-url";
 import { kr, mio, pct } from "../format";
@@ -161,7 +162,7 @@ describe("lab-parametre", () => {
     expect(m[3].prioritetsKonto).toBe(212_407);
   });
   it("scenarie-URL kan kodes og afkodes", () => {
-    const p = sanitize({ stockReturn: 0.09, apartmentSalePrice: 7_350_000, housePrice: 7_100_000, suToNordnet: true });
+    const p = sanitize({ stockReturn: 0.09, apartmentValue: 7_350_000, housePrice: 7_100_000, suToNordnet: true });
     expect(decodeScenario(encodeScenario(p))).toEqual(p);
     expect(encodeScenario(BASE)).toBe("");
     expect(sanitize({ stockReturn: 99 }).stockReturn).toBe(0.2);
@@ -235,9 +236,9 @@ describe("engangskøb", () => {
   });
 
   it("kan ligge i en adresse og komme uændret tilbage", () => {
-    const p = { ...BASE, apartmentSalePrice: 6_500_000, events: [car({ pay: "laan", loanYears: 5, loanRate: 0.045 }), car({ id: "x", label: "Køkken", amount: 150_000, year: 2031, pay: "konto" })] };
+    const p = { ...BASE, apartmentValue: 6_500_000, events: [car({ pay: "laan", loanYears: 5, loanRate: 0.045 }), car({ id: "x", label: "Køkken", amount: 150_000, year: 2031, pay: "konto" })] };
     const back = decodeScenario(encodeScenario(p));
-    expect(back.apartmentSalePrice).toBe(6_500_000);
+    expect(back.apartmentValue).toBe(6_500_000);
     expect(back.events).toHaveLength(2);
     expect(back.events![0]).toMatchObject({ label: "Bil", amount: 300_000, year: 2029, pay: "laan", loanYears: 5, loanRate: 0.045, on: true });
     expect(back.events![1]).toMatchObject({ label: "Køkken", pay: "konto", year: 2031 });
@@ -246,20 +247,102 @@ describe("engangskøb", () => {
   });
 
   it("dyrere hus trækker mere fra Nordnet efter flytningen", () => {
-    expect(nordnetCutFor(6_500_000)).toBe(1_300);
-    expect(nordnetCutFor(7_500_000)).toBeGreaterThan(2_500);
-    expect(nordnetCutFor(4_000_000)).toBe(0);
+    expect(effectiveCut(BASE)).toBe(1_300);
+    expect(effectiveCut({ ...BASE, housePrice: 7_500_000 })).toBeGreaterThan(2_500);
+    expect(effectiveCut({ ...BASE, housePrice: 4_000_000 })).toBeLessThan(0);
+    expect(effectiveCut({ ...BASE, newLoanRate: 0.05 })).toBeGreaterThan(1_300);
+    expect(effectiveCut({ ...BASE, downPaymentPct: 0.3 })).toBeLessThan(1_300);
   });
 });
 
 describe("lejlighedens værdi", () => {
   it("formuen i dag følger den pris, lejligheden sættes til", () => {
     const base = simulate(BASE);
-    const lower = simulate({ ...BASE, apartmentSalePrice: 6_500_000 });
+    const lower = simulate({ ...BASE, apartmentValue: 6_500_000 });
     expect(base.rows[0].wealthWithPension - lower.rows[0].wealthWithPension).toBeCloseTo(500_000, 0);
     expect(base.rows[0].equity - lower.rows[0].equity).toBeCloseTo(500_000, 0);
     expect(lower.rows[0].emil.wealth).toBeCloseTo(base.rows[0].emil.wealth - 250_000, 0);
     const g = growthBreakdown(lower);
     expect(Math.abs(g.sum - g.total)).toBeLessThan(1);
+  });
+});
+
+describe("alle variabler", () => {
+  const base = simulate(BASE);
+  const end = (p: Partial<ScenarioParams>) => last(simulate({ ...BASE, ...p })).wealthWithPension;
+  const now = (p: Partial<ScenarioParams>) => simulate({ ...BASE, ...p }).rows[0].wealthWithPension;
+  const B = last(base).wealthWithPension;
+
+  it("planens værdier giver præcis basis", () => {
+    expect(simulate({ ...BASE }).rows.map((r) => r.wealthWithPension)).toEqual(base.rows.map((r) => r.wealthWithPension));
+  });
+
+  it("hver variabel trækker i den rigtige retning", () => {
+    expect(end({ apartmentGrowth: 0.03 })).toBeGreaterThan(B);
+    expect(now({ apartmentGrowth: 0.03 })).toBe(base.rows[0].wealthWithPension);
+    expect(end({ newLoanRate: 0.05 })).toBeLessThan(B);
+    expect(end({ prioRate: 0.06 })).toBeLessThan(B);
+    expect(end({ kontoRate: 0.05 })).toBeGreaterThan(B);
+    expect(end({ energiRate: 0.06 })).toBeLessThan(B);
+    // SU-lånet er betalt ud før 2035 uanset rente. Forskellen ses undervejs, og i 2035 hvis pengene bagefter går til Nordnet.
+    expect(rowFor(simulate({ ...BASE, suRate: 0.05 }), 2030)!.wealth).toBeLessThan(rowFor(base, 2030)!.wealth);
+    expect(end({ suRate: 0.05, suToNordnet: true })).toBeLessThan(end({ suToNordnet: true }));
+    expect(end({ salaer: 100_000 })).toBeLessThan(B);
+    expect(now({ salaer: 100_000 })).toBeCloseTo(base.rows[0].wealthWithPension - 25_000, 0);
+    expect(end({ purchaseCosts: 100_000 })).toBeLessThan(B);
+    expect(end({ pensionEmil: 9_000 })).toBeGreaterThan(B);
+    expect(end({ taxHigh: 0.45 })).toBeLessThan(B);
+    expect(end({ askRate: 0.2, askShare: 0.5 })).toBeLessThan(end({ askShare: 0.5 }));
+  });
+
+  it("lejlighedens prisudvikling giver højere salgspris", () => {
+    const r = simulate({ ...BASE, apartmentGrowth: 0.025 });
+    expect(r.sale!.salePrice).toBeCloseTo(7_000_000 * 1.025 ** 2, -1);
+  });
+
+  it("dyrere prioritetslån tager fra Nordnet før salget og intet efter", () => {
+    const r = simulate({ ...BASE, prioRate: 0.0577 });
+    const d = (y: number) => rowFor(base, y)!.flowsYear.emilStocksIn - rowFor(r, y)!.flowsYear.emilStocksIn;
+    expect(d(2027)).toBeCloseTo((540_000 * 0.01) / 2, -1);
+    expect(d(2030)).toBe(0);
+  });
+
+  it("stor udbetaling tager fra aktierne uden at gøre noget negativt", () => {
+    const r = simulate({ ...BASE, downPaymentPct: 0.6 });
+    expect(r.sale!.surplus).toBeLessThan(0);
+    for (const row of r.rows) {
+      expect(row.emil.stocksValue).toBeGreaterThanOrEqual(0);
+      expect(row.emil.stocksBasis).toBeGreaterThanOrEqual(0);
+    }
+  });
+
+  it("væksten går altid op, uanset kombination", () => {
+    let seed = 7;
+    const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    const pick = (lo: number, hi: number) => lo + (hi - lo) * rnd();
+    for (let i = 0; i < 60; i++) {
+      const p: ScenarioParams = {
+        ...BASE,
+        stockReturn: pick(-0.03, 0.12), pensionReturn: pick(0, 0.07), apartmentGrowth: pick(-0.05, 0.1), houseGrowth: pick(-0.02, 0.07),
+        apartmentValue: pick(5e6, 9e6), housePrice: pick(4e6, 9e6), saleMonth: [12, 24, 36, 48][i % 4], downPaymentPct: pick(0.05, 0.6),
+        salaer: pick(0, 150_000), purchaseCosts: pick(0, 150_000), movingCosts: pick(0, 100_000), cashAfterSale: pick(0, 300_000),
+        newLoanRate: pick(0, 0.08), prioRate: pick(0, 0.1), kontoRate: pick(0, 0.08), energiRate: pick(0, 0.1), suRate: pick(0, 0.08),
+        salaryGrowth: pick(0, 0.05), nordnetEmil: pick(0, 15_000), nordnetFrederikke: pick(0, 15_000), nordnetCutAfterMove: pick(-2_000, 5_000),
+        askShare: pick(0, 1), suToNordnet: i % 2 === 0, pensionEmil: pick(0, 15_000), pensionFrederikke: pick(0, 15_000),
+        taxLow: pick(0.2, 0.35), taxHigh: pick(0.35, 0.55), taxThreshold: pick(40_000, 150_000), askRate: pick(0.1, 0.3),
+      };
+      const r = simulate(p);
+      const g = growthBreakdown(r);
+      expect(Number.isFinite(g.end), `kombination ${i}`).toBe(true);
+      expect(Math.abs(g.sum - g.total), `kombination ${i}`).toBeLessThan(1);
+    }
+  });
+
+  it("gamle gemte planer med nc bliver ikke talt dobbelt", () => {
+    const old = decodeScenario("hp=7500000&nc=2557");
+    expect(old.nordnetCutAfterMove).toBe(1_300);
+    expect(effectiveCut(old)).toBe(2_557);
+    const all = { ...BASE, apartmentGrowth: 0.02, newLoanRate: 0.04, pensionEmil: 8_000, taxThreshold: 80_000, downPaymentPct: 0.25 };
+    expect(decodeScenario(encodeScenario(all))).toMatchObject(all);
   });
 });

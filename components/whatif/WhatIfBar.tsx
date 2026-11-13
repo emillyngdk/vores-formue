@@ -8,7 +8,7 @@ import { Range } from "@/components/ui/Range";
 import { Segmented } from "@/components/ui/Segmented";
 import { Spark } from "@/components/ui/Spark";
 import { Ticker } from "@/components/ui/Ticker";
-import { housingCostMonthly } from "@/lib/engine";
+import { effectiveCut, housingCostMonthly } from "@/lib/engine";
 import { kr, mioTal, pct, tal } from "@/lib/format";
 import { useScenario } from "@/lib/scenario";
 import { EventFields } from "./EventFields";
@@ -152,7 +152,7 @@ export function WhatIfBar() {
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6">
           <div ref={scroller} className="whatif-scroll relative -mx-4 flex items-center gap-2 overflow-x-auto px-4 py-2 sm:mx-0 sm:px-0" role="toolbar" aria-label="Hvad nu hvis">
             <span className="eyebrow shrink-0 pr-1 text-[0.6875rem] sm:text-xs">Hvad nu hvis</span>
-            <Chip id="apartment" label="Lejlighed" value={mioTal(d.apartmentSalePrice)} changed={d.apartmentSalePrice !== plan.apartmentSalePrice} active={open === "apartment"} onClick={toggle("apartment")} />
+            <Chip id="apartment" label="Lejlighed" value={mioTal(d.apartmentValue)} changed={d.apartmentValue !== plan.apartmentValue} active={open === "apartment"} onClick={toggle("apartment")} />
             <Chip id="house" label="Hus" value={mioTal(d.housePrice)} changed={d.housePrice !== plan.housePrice} active={open === "house"} onClick={toggle("house")} />
             <Chip id="move" label="Flytning" value={String(saleYear)} changed={d.saleMonth !== plan.saleMonth} active={open === "move"} onClick={toggle("move")} />
             <Chip id="returns" label="Aktieafkast" value={pct(d.stockReturn, 1)} changed={returnsChanged} active={open === "returns"} onClick={toggle("returns")} />
@@ -174,8 +174,18 @@ export function WhatIfBar() {
                 <span aria-hidden className="text-base leading-none">＋</span> Køb, fx bil
               </button>
             )}
-            <Link href="/lab" className="flex min-h-11 shrink-0 items-center whitespace-nowrap py-2 pl-2 pr-8 text-[13px] font-semibold text-muted underline underline-offset-4">
-              {"Flere i lab'et"}
+            <Link
+              href="/lab"
+              onClick={() => {
+                try {
+                  sessionStorage.setItem("vf-lab-focus", "variabler");
+                } catch {
+                  /* så lander man bare øverst i lab'et */
+                }
+              }}
+              className="flex min-h-11 shrink-0 items-center whitespace-nowrap py-2 pl-2 pr-8 text-[13px] font-semibold text-muted underline underline-offset-4"
+            >
+              Alle variabler
             </Link>
           </div>
 
@@ -275,19 +285,20 @@ export function WhatIfBar() {
             <div className="mt-4">
               {open === "apartment" && (
                 <>
-                  <Range label="Værdi og salgspris" value={d.apartmentSalePrice} min={6_000_000} max={8_000_000} step={50_000} onChange={(v) => sc.set("apartmentSalePrice", v)} display={`${mioTal(d.apartmentSalePrice)} kr.`} color="var(--mint)" />
+                  <Range label="Værdi i dag" value={d.apartmentValue} min={6_000_000} max={8_000_000} step={50_000} onChange={(v) => sc.set("apartmentValue", v)} display={`${mioTal(d.apartmentValue)} kr.`} color="var(--mint)" />
                   <p className="mt-1 text-sm text-muted" style={sale && sale.surplus < 0 ? { color: "var(--coral)" } : undefined}>
                     Friværdi i dag <span className="num text-ink">{kr(sim.rows[0].equity)}</span>
-                    {sale && (sale.surplus < 0 ? `. Der mangler ${kr(-sale.surplus)} ved hushandlen i ${saleYear}.` : ` · ${kr(sale.perPerson)} til hver efter hushandlen i ${saleYear}`)}
+                    {d.apartmentGrowth !== 0 && sale && ` · salgspris ${mioTal(sale.salePrice)} kr. i ${saleYear}`}
+                    {sale && (sale.surplus < 0 ? `. Der mangler ${kr(-sale.surplus)} ved hushandlen i ${saleYear}.` : ` · ${kr(sale.perPerson)} til hver efter hushandlen`)}
                   </p>
-                  <BackToPlan show={d.apartmentSalePrice !== plan.apartmentSalePrice} onClick={() => sc.set("apartmentSalePrice", plan.apartmentSalePrice)} text={mioTal(plan.apartmentSalePrice)} />
+                  <BackToPlan show={d.apartmentValue !== plan.apartmentValue} onClick={() => sc.set("apartmentValue", plan.apartmentValue)} text={mioTal(plan.apartmentValue)} />
                 </>
               )}
               {open === "house" && (
                 <>
                   <Range label="Husets pris" value={d.housePrice} min={5_500_000} max={8_000_000} step={50_000} onChange={sc.setHousePrice} display={`${mioTal(d.housePrice)} kr.`} color="var(--mint)" />
                   <p className="mt-2 text-sm text-muted">
-                    20 % i udbetaling. Lånet koster ca. {kr(Math.round(housingCostMonthly(d.housePrice) / 100) * 100)} om måneden i rente, så Nordnet sættes ned med {kr(d.nordnetCutAfterMove)} hver efter flytningen.
+                    {Math.round(d.downPaymentPct * 100)} % i udbetaling. Lånet koster ca. {kr(Math.round(housingCostMonthly(d.housePrice, d.downPaymentPct, d.newLoanRate) / 100) * 100)} om måneden i rente og bidrag, så Nordnet sættes {effectiveCut(d) >= 0 ? `ned med ${kr(effectiveCut(d))}` : `op med ${kr(-effectiveCut(d))}`} hver efter flytningen.
                   </p>
                   <BackToPlan show={d.housePrice !== plan.housePrice} onClick={() => sc.setHousePrice(plan.housePrice)} text={mioTal(plan.housePrice)} />
                 </>
@@ -309,7 +320,9 @@ export function WhatIfBar() {
                 <div className="space-y-5">
                   <Range label="Emil pr. måned" value={d.nordnetEmil} min={0} max={15_000} step={500} onChange={(v) => sc.set("nordnetEmil", v)} display={kr(d.nordnetEmil)} color="var(--violet)" />
                   <Range label="Frederikke pr. måned" value={d.nordnetFrederikke} min={0} max={15_000} step={500} onChange={(v) => sc.set("nordnetFrederikke", v)} display={kr(d.nordnetFrederikke)} color="var(--sky)" />
-                  <p className="text-sm text-muted">Efter flytningen trækkes {kr(d.nordnetCutAfterMove)} fra hos hver, fordi huset koster mere.</p>
+                  <p className="text-sm text-muted">
+                    {effectiveCut(d) >= 0 ? `Efter flytningen trækkes ${kr(effectiveCut(d))} fra hos hver, fordi huset koster mere.` : `Efter flytningen kan hver sætte ${kr(-effectiveCut(d))} mere ind, fordi huset er billigere.`}
+                  </p>
                 </div>
               )}
               {openEvent && <EventFields event={openEvent} />}
