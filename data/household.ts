@@ -76,7 +76,7 @@ export const loans = {
     freedMonthly: 4_000,
     minKontoAtQuarterEnd: 50_000,
   },
-  energilaan: { rate: 0.037, monthly: 907 },
+  energilaan: { rate: 0.015, monthly: 907 },
   suLoan: { rate: 0.0285, monthly: 1_257 },
   realkredit: { interestOnly: true },
 } as const;

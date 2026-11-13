@@ -24,7 +24,7 @@ describe("assistentens værktøjer", () => {
     const out = runTool("simulate", {});
     const r = out.result as { aar_for_aar: { aar: number; samlet_med_pension: number }[]; forskel_mod_basis: Record<string, { med_pension: number }> };
     expect(r.aar_for_aar).toHaveLength(10);
-    expect(r.aar_for_aar[9].samlet_med_pension).toBe(9_653_360);
+    expect(r.aar_for_aar[9].samlet_med_pension).toBe(9_657_845);
     expect(r.forskel_mod_basis["2035"].med_pension).toBe(0);
     expect(out.card).toBeUndefined();
   });
@@ -40,7 +40,7 @@ describe("assistentens værktøjer", () => {
   });
   it("get_snapshot finder år og person", () => {
     const emil = runTool("get_snapshot", { aar: 2031, person: "emil" }).result as { formue_uden_pension: number };
-    expect(emil.formue_uden_pension).toBe(2_532_041);
+    expect(emil.formue_uden_pension).toBe(2_533_917);
     expect(runTool("get_snapshot", { aar: 2050 }).result).toHaveProperty("fejl");
   });
   it("ordliste og ukendt værktøj", () => {
@@ -55,7 +55,7 @@ describe("assistentens værktøjer", () => {
   it("systemprompten indeholder tallene, men ingen følsomme oplysninger", () => {
     const s = buildSystemPrompt();
     expect(s).toContain("3.511.015 kr.");
-    expect(s).toContain("9.653.360 kr.");
+    expect(s).toContain("9.657.845 kr.");
     expect(s).not.toMatch(/\d{6}-\d{4}/); // CPR
     expect(s).not.toMatch(/@/); // e-mail
     expect(s).not.toMatch(/Hans Broges/i); // adresse

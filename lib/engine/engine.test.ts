@@ -10,18 +10,18 @@ const TOL = 1_000;
 const near = (actual: number, expected: number) =>
   expect(Math.abs(actual - expected), `forventet ${expected}, fik ${Math.round(actual)}`).toBeLessThanOrEqual(TOL);
 
-// Afsnit 6.4: [år, Emil u.p., Frederikke u.p., samlet u.p., pension, samlet m.p., friværdi, aktier e. skat, konti − SU]
+// Energilånet til 1,5 % (rettet 13. nov. 2026). [år, Emil u.p., Frederikke u.p., samlet u.p., pension, samlet m.p., friværdi, aktier e. skat, konti − SU]
 const FIXTURES: [number, number, number, number, number, number, number, number, number][] = [
   [2026, 1_704_974, 1_391_835, 3_096_809, 414_206, 3_511_015, 2_430_000, 434_729, 232_080],
-  [2027, 1_804_071, 1_502_185, 3_306_256, 630_314, 3_936_569, 2_437_985, 616_585, 251_686],
-  [2028, 1_848_904, 1_558_303, 3_407_207, 855_066, 4_262_273, 1_300_000, 1_954_649, 152_558],
-  [2029, 2_068_515, 1_798_086, 3_866_601, 1_088_808, 4_955_408, 1_527_500, 2_172_880, 166_220],
-  [2030, 2_295_232, 2_039_139, 4_334_371, 1_331_899, 5_666_270, 1_762_963, 2_391_132, 180_277],
-  [2031, 2_532_041, 2_290_356, 4_822_397, 1_584_715, 6_407_112, 2_006_666, 2_620_991, 194_740],
-  [2032, 2_779_504, 2_551_340, 5_330_844, 1_847_643, 7_178_487, 2_258_900, 2_863_272, 208_673],
-  [2033, 3_038_217, 2_809_260, 5_847_477, 2_121_088, 7_968_565, 2_519_961, 3_118_843, 208_673],
-  [2034, 3_308_813, 3_078_654, 6_387_468, 2_405_470, 8_792_938, 2_790_160, 3_388_635, 208_673],
-  [2035, 3_591_964, 3_360_167, 6_952_131, 2_701_229, 9_653_360, 3_069_815, 3_673_643, 208_673],
+  [2027, 1_804_939, 1_503_053, 3_307_992, 630_314, 3_938_305, 2_439_721, 616_585, 251_686],
+  [2028, 1_850_564, 1_559_962, 3_410_526, 855_066, 4_265_591, 1_300_000, 1_957_968, 152_558],
+  [2029, 2_070_241, 1_799_813, 3_870_054, 1_088_808, 4_958_862, 1_527_500, 2_176_334, 166_220],
+  [2030, 2_297_031, 2_040_938, 4_337_969, 1_331_899, 5_669_868, 1_762_963, 2_394_729, 180_277],
+  [2031, 2_533_917, 2_292_232, 4_826_149, 1_584_715, 6_410_863, 2_006_666, 2_624_743, 194_740],
+  [2032, 2_781_463, 2_553_299, 5_334_761, 1_847_643, 7_182_404, 2_258_900, 2_867_189, 208_673],
+  [2033, 3_040_264, 2_811_307, 5_851_570, 2_121_088, 7_972_658, 2_519_961, 3_122_936, 208_673],
+  [2034, 3_310_954, 3_080_796, 6_391_750, 2_405_470, 8_797_220, 2_790_160, 3_392_917, 208_673],
+  [2035, 3_594_207, 3_362_409, 6_956_616, 2_701_229, 9_657_845, 3_069_815, 3_678_128, 208_673],
 ];
 
 describe("basis-scenariet år for år (afsnit 6.4)", () => {
@@ -49,11 +49,11 @@ describe("salget i oktober 2028", () => {
   it("rammer testtallene", () => {
     near(sale.realkredit, 3_873_000);
     near(sale.prioritetslaan, 540_000);
-    near(sale.energilaan, 65_731);
+    near(sale.energilaan, 62_412);
     near(sale.prioritetsKonto, 212_407);
-    near(sale.net, 2_658_676);
-    near(sale.surplus, 1_246_426);
-    near(sale.perPerson, 623_213);
+    near(sale.net, 2_661_995);
+    near(sale.surplus, 1_249_745);
+    near(sale.perPerson, 624_873);
   });
   it("SU-lånet er betalt ud i oktober 2032 (måned 72)", () => {
     expect(simulate(BASE).suPaidOffMonth).toBe(72);
@@ -63,26 +63,26 @@ describe("salget i oktober 2028", () => {
 describe("vækst 2026 → 2035", () => {
   const g = growthBreakdown(simulate(BASE));
   it("summen af posterne går op", () => {
-    near(g.total, 6_142_345);
+    near(g.total, 6_146_830);
     near(g.sum, g.total);
   });
   it("hver post", () => {
     near(g.parts.stocksIn, 1_185_600);
-    near(g.parts.stocksReturn, 1_523_144);
-    near(g.parts.taxIfSold, -616_256);
+    near(g.parts.stocksReturn, 1_525_154);
+    near(g.parts.taxIfSold, -617_100);
     near(g.parts.pensionIn, 1_763_748);
     near(g.parts.pensionReturn, 523_275);
     near(g.parts.houseGrowth, 1_769_815);
-    near(g.parts.debtPaid, 98_569);
+    near(g.parts.debtPaid, 101_888);
     near(g.parts.prioritetsKontoIn, 6_700);
     near(g.parts.housingTransaction, -112_250);
   });
 });
 
 describe("scenarier 2035 (med pension)", () => {
-  it("Forsigtig", () => near(last(simulate(PRESETS.forsigtig)).wealthWithPension, 7_854_352));
-  it("Basis", () => near(last(simulate(PRESETS.basis)).wealthWithPension, 9_653_360));
-  it("God", () => near(last(simulate(PRESETS.god)).wealthWithPension, 10_708_637));
+  it("Forsigtig", () => near(last(simulate(PRESETS.forsigtig)).wealthWithPension, 7_858_455));
+  it("Basis", () => near(last(simulate(PRESETS.basis)).wealthWithPension, 9_657_845));
+  it("God", () => near(last(simulate(PRESETS.god)).wealthWithPension, 10_713_549));
 });
 
 describe("ekstra-testen", () => {
