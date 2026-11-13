@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Checklist } from "@/components/Checklist";
 
-export const metadata: Metadata = { title: "Huskeliste · Vores Formue" };
+export const metadata: Metadata = { title: "Huskeliste · Kistebunden" };
 
 export default function Page() {
   return (

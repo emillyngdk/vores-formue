@@ -24,7 +24,7 @@ export async function GET(req: Request) {
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex, nofollow" />
-<title>Log ind · Vores Formue</title>
+<title>Log ind · Kistebunden</title>
 <link rel="icon" href="/icons/icon-192.png" />
 <style>
   :root { color-scheme: dark; }
@@ -48,11 +48,13 @@ export async function GET(req: Request) {
   .eye[aria-pressed="true"] { color: #f4f1ea; }
   .err { color: #ff6b5b; font-size: .875rem; font-weight: 600; margin: 10px 0 0; }
   .msg { color: #9aa0c3; margin: 0; }
+  .mark { display: block; margin: 0 0 20px; border-radius: 18px; }
 </style>
 </head>
 <body>
 <main>
-  <h1>Vores Formue</h1>
+  <img class="mark" src="/icons/icon-192.png" width="72" height="72" alt="" />
+  <h1>Kistebunden</h1>
   <p class="sub">Privat side. Log ind for at fortsætte.</p>
   ${body}
 </main>

@@ -9,10 +9,10 @@ import { Nav } from "@/components/Nav";
 import { Providers } from "@/components/Providers";
 
 export const metadata: Metadata = {
-  title: "Vores Formue",
+  title: "Kistebunden",
   description: "Emil og Frederikkes private økonomi, fra i dag til 2035.",
   robots: { index: false, follow: false, nocache: true, googleBot: { index: false, follow: false } },
-  appleWebApp: { capable: true, title: "Vores Formue", statusBarStyle: "black-translucent" },
+  appleWebApp: { capable: true, title: "Kistebunden", statusBarStyle: "black-translucent" },
 };
 
 export const viewport: Viewport = {

@@ -1,4 +1,4 @@
-# Vores Formue
+# Kistebunden
 
 Privat økonomi-side for Emil og Frederikke. Kun til eget brug. Siden kræver login og er ikke indekseret.
 

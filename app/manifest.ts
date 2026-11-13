@@ -2,9 +2,9 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Vores Formue",
-    short_name: "Formue",
-    description: "Vores private økonomi, fra i dag til 2035.",
+    name: "Kistebunden",
+    short_name: "Kistebunden",
+    description: "Det, vi har på kistebunden. Vores private økonomi fra i dag til 2035.",
     lang: "da",
     start_url: "/",
     display: "standalone",

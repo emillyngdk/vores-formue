@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { CheckIn } from "@/components/CheckIn";
 
-export const metadata: Metadata = { title: "Månedlig check-in · Vores Formue" };
+export const metadata: Metadata = { title: "Månedlig check-in · Kistebunden" };
 
 export default function Page() {
   return (

@@ -1,6 +1,6 @@
-# Vores Formue
+# Kistebunden
 
-Privat økonomi-webapp for Emil og Frederikke. Next.js på Vercel. Et push til `main` udruller automatisk.
+Appen hed før "Vores Formue", og repoet og Vercel-projektet hedder stadig `vores-formue`. Privat økonomi-webapp for Emil og Frederikke. Next.js på Vercel. Et push til `main` udruller automatisk.
 
 ## Når Emil sender nye tal
 1. Ret tallene i `data/household.ts`. Det er den eneste sandhedskilde. Sæt også `meta.dataAsOf` og `meta.lastUpdated`.
@@ -23,4 +23,5 @@ Statiske tekster med tal: `peers` i `data/household.ts` (sammenligningen med jæ
 - `lib/engine/`: regnemotoren (`simulate`, engangskøb, `growthBreakdown`).
 - `lib/scenario.tsx`: planen og det, man leger med på forsiden ("Hvad nu hvis").
 - `components/home/`: forsiden. `components/whatif/`: bjælken og skuffen. `components/lab/`, `components/ask/`: lab og Spørg Claude.
+- `design/ikon.mjs`: tegner app-ikonerne (kisten). Køres kun, når ikonet ændres.
 - `artifact/`: bygger den udgave, der kan vises som artifact i Claude (`npm run artifact`).

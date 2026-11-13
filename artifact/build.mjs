@@ -45,7 +45,7 @@ css = css.replace(/@font-face\s*\{[^}]*\}/g, ""); // Poppins hentes fra Google F
 if (/url\(\s*["']?(?:\.\.?\/|\/|https?:)/.test(css)) throw new Error("CSS'en henviser stadig til eksterne filer");
 css += "\n" + fs.readFileSync(path.join(root, "artifact/extra.css"), "utf8");
 
-const page = `<title>Vores Formue</title>
+const page = `<title>Kistebunden</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap">
 <style>

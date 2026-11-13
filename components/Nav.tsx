@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Logo } from "@/components/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 const LINKS = [
@@ -26,8 +27,9 @@ export function Nav() {
     <>
       <header className="glass top-0 z-40 border-b border-line md:sticky">
         <div className="mx-auto flex h-16 max-w-[1280px] items-center justify-between px-4 sm:px-6">
-          <Link href="/" className="display flex min-h-11 items-center text-sm tracking-[0.12em]">
-            Vores Formue
+          <Link href="/" className="display flex min-h-11 items-center gap-2.5 text-sm tracking-[0.12em]">
+            <Logo />
+            Kistebunden
           </Link>
           <nav aria-label="Hovedmenu" className="hidden items-center gap-1 md:flex">
             {LINKS.map((l) => (

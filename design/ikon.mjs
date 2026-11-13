@@ -1,0 +1,43 @@
+// Tegner app-ikonerne. Kør: node design/ikon.mjs (kræver Playwright, kun nødvendig når ikonet ændres)
+import fs from "node:fs";
+import path from "node:path";
+
+const root = path.resolve(import.meta.dirname, "..");
+const chest = `
+  <ellipse cx="256" cy="240" rx="190" ry="78" fill="#ffb547" opacity=".30" filter="url(#blur)"/>
+  <path d="M112 226C112 160 162 116 226 116h60c64 0 114 44 114 110z" fill="url(#lid)"/>
+  <rect x="124" y="222" width="264" height="34" fill="#ffc266"/>
+  <rect x="124" y="222" width="264" height="10" fill="#fff0c9" opacity=".8"/>
+  <path d="M112 250h288v118a30 30 0 0 1-30 30H142a30 30 0 0 1-30-30z" fill="url(#body)"/>
+  <circle cx="256" cy="312" r="38" fill="#f4f1ea"/>
+  <circle cx="256" cy="302" r="12" fill="#0b1026"/>
+  <rect x="248" y="304" width="16" height="30" rx="8" fill="#0b1026"/>
+  <path d="M404 96l9 23 23 9-23 9-9 23-9-23-23-9 23-9z" fill="#ffd58a"/>`;
+const defs = `<defs>
+  <radialGradient id="bg" cx="32%" cy="22%" r="100%"><stop offset="0" stop-color="#2b2670"/><stop offset=".6" stop-color="#141a3d"/><stop offset="1" stop-color="#0b1026"/></radialGradient>
+  <linearGradient id="lid" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a48cff"/><stop offset="1" stop-color="#7b5cf5"/></linearGradient>
+  <linearGradient id="body" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6247ea"/><stop offset="1" stop-color="#4a32c4"/></linearGradient>
+  <filter id="blur" x="-50%" y="-100%" width="200%" height="300%"><feGaussianBlur stdDeviation="26"/></filter>
+</defs>`;
+export const svg = (kind) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">${defs}
+  <rect width="512" height="512" ${kind === "rounded" ? 'rx="116"' : ""} fill="url(#bg)"/>
+  <g ${kind === "maskable" ? 'transform="translate(56 56) scale(.78)"' : ""}>${chest}</g></svg>`;
+
+const jobs = [
+  ["public/icons/icon-192.png", 192, "rounded"],
+  ["public/icons/icon-512.png", 512, "rounded"],
+  ["public/icons/icon-maskable-512.png", 512, "maskable"],
+  ["app/apple-icon.png", 180, "square"],
+  ["app/icon.png", 64, "rounded"],
+];
+const { chromium } = await import(process.env.PLAYWRIGHT || "playwright");
+const b = await chromium.launch(process.env.CHROMIUM ? { executablePath: process.env.CHROMIUM } : {});
+for (const [file, size, kind] of jobs) {
+  const p = await (await b.newContext({ viewport: { width: size, height: size }, deviceScaleFactor: 1 })).newPage();
+  await p.setContent(`<style>html,body{margin:0;background:transparent}svg{display:block;width:${size}px;height:${size}px}</style>${svg(kind)}`);
+  await p.screenshot({ path: path.join(root, file), omitBackground: true });
+  await p.close();
+}
+fs.writeFileSync(path.join(root, "design/ikon.svg"), svg("rounded"));
+await b.close();
+console.log("ikoner tegnet");

@@ -22,15 +22,15 @@ export function Hero() {
   return (
     <section aria-labelledby="hero-title" className="hero-glow">
       <div className="mx-auto max-w-[1280px] px-4 pb-10 pt-6 sm:px-6 sm:pb-16 sm:pt-12">
-        <div className="grid grid-cols-1 items-end gap-x-12 gap-y-5 lg:grid-cols-[1fr_auto]">
+        <div className="grid grid-cols-1 items-end gap-x-12 gap-y-5 xl:grid-cols-[1fr_auto]">
           <div className="min-w-0">
             <p className="eyebrow">Emil og Frederikke · tal pr. oktober 2026</p>
-            <h1 id="hero-title" className="display mt-2 text-[clamp(2.3rem,10vw,6rem)]">
-              Vores formue
+            <h1 id="hero-title" className="display mt-2 text-[clamp(1.9rem,8.6vw,4.25rem)]">
+              På kistebunden
             </h1>
           </div>
 
-          <dl className="grid min-w-0 grid-cols-2 gap-x-4 lg:gap-x-14 lg:pb-2">
+          <dl className="grid min-w-0 grid-cols-2 gap-x-4 sm:max-w-2xl xl:max-w-none xl:gap-x-14 xl:pb-2">
               <div className="min-w-0">
                 <dt className="eyebrow">I dag</dt>
                 <dd className="mt-1 text-[clamp(1.2rem,5.6vw,2.75rem)] leading-none">
