@@ -1,6 +1,6 @@
 export const dynamic = "force-dynamic";
 
-/** Login-siden er ren HTML uden JavaScript-filer, så intet af sidens indhold hentes, før man er logget ind. */
+/** Login-siden er ren HTML uden JavaScript-filer, så intet af sidens indhold hentes, før man er logget ind. Kun et lille script til øjet i kodeordsfeltet. */
 export async function GET(req: Request) {
   const failed = new URL(req.url).searchParams.has("fejl");
   const locked = !process.env.SITE_PASSWORD;
@@ -8,9 +8,15 @@ export async function GET(req: Request) {
     ? `<p class="msg">Siden er låst. Der er ikke sat et kodeord endnu (miljøvariablen SITE_PASSWORD).</p>`
     : `<form method="post" action="/api/login">
         <label for="pw">Kodeord</label>
-        <input id="pw" name="password" type="password" autocomplete="current-password" required />
+        <div class="field">
+          <input id="pw" name="password" type="password" autocomplete="current-password" required />
+          <button type="button" class="eye" id="eye" aria-label="Vis kodeord" aria-pressed="false" hidden>
+            <svg class="on" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg class="off" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 5.1A10.4 10.4 0 0 1 12 5c6.4 0 10 7 10 7a17.6 17.6 0 0 1-3.2 4.1M6.5 6.6C3.7 8.5 2 12 2 12s3.6 7 10 7c1.7 0 3.2-.5 4.5-1.2"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>
+          </button>
+        </div>
         ${failed ? `<p class="err" role="alert">Forkert kodeord. Prøv igen.</p>` : ""}
-        <button type="submit">Log ind</button>
+        <button type="submit" class="go">Log ind</button>
       </form>`;
   const html = `<!doctype html>
 <html lang="da">
@@ -32,7 +38,14 @@ export async function GET(req: Request) {
   label { display: block; font-size: .875rem; font-weight: 600; margin-bottom: 6px; }
   input { width: 100%; min-height: 52px; border-radius: 16px; border: 1px solid rgba(255,255,255,.14); background: #1c2350; color: inherit; font-size: 1rem; padding: 0 16px; }
   input:focus-visible, button:focus-visible { outline: 2px solid #ffb547; outline-offset: 3px; }
-  button { width: 100%; min-height: 52px; margin-top: 20px; border: 0; border-radius: 999px; background: #ffb547; color: #0b1026; font-size: 1rem; font-weight: 700; cursor: pointer; }
+  .go { width: 100%; min-height: 52px; margin-top: 20px; border: 0; border-radius: 999px; background: #ffb547; color: #0b1026; font-size: 1rem; font-weight: 700; cursor: pointer; }
+  .field { position: relative; }
+  .field input { padding-right: 56px; }
+  .eye { position: absolute; right: 4px; top: 4px; width: 44px; height: 44px; display: grid; place-items: center; border: 0; border-radius: 12px; background: transparent; color: #9aa0c3; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .eye[hidden] { display: none; }
+  .eye .off, .eye[aria-pressed="true"] .on { display: none; }
+  .eye[aria-pressed="true"] .off { display: block; }
+  .eye[aria-pressed="true"] { color: #f4f1ea; }
   .err { color: #ff6b5b; font-size: .875rem; font-weight: 600; margin: 10px 0 0; }
   .msg { color: #9aa0c3; margin: 0; }
 </style>
@@ -43,6 +56,21 @@ export async function GET(req: Request) {
   <p class="sub">Privat side. Log ind for at fortsætte.</p>
   ${body}
 </main>
+<script>
+  // Øjet vises kun, når JavaScript virker. Uden det er feltet et almindeligt kodeordsfelt.
+  (function () {
+    var eye = document.getElementById("eye"), pw = document.getElementById("pw");
+    if (!eye || !pw) return;
+    eye.hidden = false;
+    eye.addEventListener("click", function () {
+      var show = pw.type === "password";
+      pw.type = show ? "text" : "password";
+      eye.setAttribute("aria-pressed", String(show));
+      eye.setAttribute("aria-label", show ? "Skjul kodeord" : "Vis kodeord");
+      pw.focus();
+    });
+  })();
+</script>
 </body>
 </html>`;
   return new Response(html, { status: 200, headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "X-Robots-Tag": "noindex, nofollow" } });
