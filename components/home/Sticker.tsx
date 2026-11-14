@@ -11,13 +11,13 @@ export function Sticker({ value }: { value: number }) {
         </defs>
         <circle cx="100" cy="100" r="98" fill="var(--accent)" />
         <g className="sticker-spin">
-          <text fontFamily="var(--font-mono)" fontWeight="500" fontSize="17" fill="#ffffff" letterSpacing="2">
+          <text fontFamily="var(--font-mono)" fontWeight="500" fontSize="17" fill="var(--on-accent)" letterSpacing="2">
             <textPath href="#sticker-ring" textLength="462" lengthAdjust="spacing">
               VÆKST OM ÅRET · FREM TIL 2035 ·
             </textPath>
           </text>
         </g>
-        <text x="100" y="116" textAnchor="middle" fontFamily="var(--font-display)" fontSize="46" fill="#ffffff">
+        <text x="100" y="116" textAnchor="middle" fontFamily="var(--font-display)" fontSize="46" fill="var(--on-accent)">
           {text.replace(" %", "%")}
         </text>
       </svg>

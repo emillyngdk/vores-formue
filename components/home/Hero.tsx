@@ -12,7 +12,7 @@ import { WealthLine } from "./WealthLine";
 
 const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
 const PEOPLE = [
-  { key: "emil" as const, name: people.emil.name, color: "var(--blue)" },
+  { key: "emil" as const, name: people.emil.name, color: "var(--choc)" },
   { key: "frederikke" as const, name: people.frederikke.name, color: "var(--caramel)" },
 ];
 

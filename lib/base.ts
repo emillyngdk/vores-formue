@@ -9,7 +9,7 @@ export type View = "os" | "emil" | "frederikke";
 
 export const CATEGORIES = [
   { key: "equity", label: "Friværdi", color: "var(--home)" },
-  { key: "stocks", label: "Aktier", color: "var(--blue)" },
+  { key: "stocks", label: "Aktier", color: "var(--choc)" },
   { key: "accounts", label: "Konti", color: "var(--cash)" },
   { key: "pension", label: "Pension", color: "var(--caramel)" },
 ] as const;

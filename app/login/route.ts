@@ -32,15 +32,15 @@ export async function GET(req: Request) {
   * { box-sizing: border-box; }
   body { margin: 0; min-height: 100dvh; display: grid; place-items: center; padding: 16px; background: #fbe38e; color: #fbe38e;
     font-family: Poppins, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-    background-image: radial-gradient(40% 40% at 25% 20%, rgba(255,250,230,.7), transparent 70%), radial-gradient(40% 40% at 75% 85%, rgba(43,91,255,.14), transparent 70%); }
+    background-image: radial-gradient(40% 40% at 25% 20%, rgba(255,250,230,.7), transparent 70%), radial-gradient(40% 40% at 75% 85%, rgba(200,112,30,.16), transparent 70%); }
   main { width: 100%; max-width: 400px; background: #3a2218; border: 0; box-shadow: 0 24px 60px rgba(58,34,24,.25); border-radius: 28px; padding: 32px; }
   h1 { margin: 0 0 8px; font-family: Anton, "Arial Narrow", Impact, sans-serif; font-size: 2.6rem; font-weight: 400; text-transform: uppercase; letter-spacing: .005em; line-height: 1; }
-  .bar { display: block; width: 120px; height: 6px; border-radius: 6px; background: #2b5bff; margin: 0 0 18px; transform: rotate(-2deg); }
+  .bar { display: block; width: 120px; height: 6px; border-radius: 6px; background: #fbe38e; margin: 0 0 18px; transform: rotate(-2deg); }
   .sub { margin: 0 0 28px; color: #d2b88a; }
   label { display: block; font-size: .875rem; font-weight: 600; margin-bottom: 6px; }
   input { width: 100%; min-height: 52px; border-radius: 16px; border: 1px solid rgba(251,227,142,.18); background: #46291d; color: inherit; font-size: 1rem; padding: 0 16px; }
-  input:focus-visible, button:focus-visible { outline: 2px solid #2b5bff; outline-offset: 3px; }
-  .go { width: 100%; min-height: 52px; margin-top: 20px; border: 0; border-radius: 999px; background: #2b5bff; color: #ffffff; font-size: 1rem; font-weight: 700; cursor: pointer; }
+  input:focus-visible, button:focus-visible { outline: 2px solid #c8701e; outline-offset: 3px; }
+  .go { width: 100%; min-height: 52px; margin-top: 20px; border: 0; border-radius: 999px; background: #fbe38e; color: #3a2218; font-size: 1rem; font-weight: 700; cursor: pointer; }
   .field { position: relative; }
   .field input { padding-right: 56px; }
   .eye { position: absolute; right: 4px; top: 4px; width: 44px; height: 44px; display: grid; place-items: center; border: 0; border-radius: 12px; background: transparent; color: #d2b88a; cursor: pointer; -webkit-tap-highlight-color: transparent; }

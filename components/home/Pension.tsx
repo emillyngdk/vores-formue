@@ -17,7 +17,7 @@ export function Pension() {
   const t = row.flowsTotal;
   const maxV = Math.max(rows[N].emil.pension, rows[N].frederikke.pension) * 1.06;
   const vessels = [
-    { name: "Emil", v: row.emil.pension, start: rows[0].emil.pension, color: "var(--blue)", monthly: people.emil.pensionMonthly },
+    { name: "Emil", v: row.emil.pension, start: rows[0].emil.pension, color: "var(--choc)", monthly: people.emil.pensionMonthly },
     { name: "Frederikke", v: row.frederikke.pension, start: rows[0].frederikke.pension, color: "var(--caramel)", monthly: people.frederikke.pensionMonthly },
   ];
 

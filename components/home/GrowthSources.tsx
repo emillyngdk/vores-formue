@@ -10,8 +10,8 @@ export function GrowthSources() {
   const p = g.parts;
   const steps: Step[] = [
     { label: "Formue i dag", value: g.start, kind: "total", color: "var(--muted)" },
-    { label: "Indbetalt på Nordnet", value: p.stocksIn, kind: "delta", color: "var(--blue)" },
-    { label: "Afkast på aktier", value: p.stocksReturn, kind: "delta", color: "var(--blue)" },
+    { label: "Indbetalt på Nordnet", value: p.stocksIn, kind: "delta", color: "var(--choc)" },
+    { label: "Afkast på aktier", value: p.stocksReturn, kind: "delta", color: "var(--choc)" },
     { label: sim.events.some((e) => e.tax > 0.5) ? "Skat på aktierne" : "Skat, hvis aktierne sælges", value: p.taxIfSold, kind: "delta" },
     { label: "Indbetalt til pension", value: p.pensionIn, kind: "delta", color: "var(--caramel)" },
     { label: "Afkast på pension", value: p.pensionReturn, kind: "delta", color: "var(--caramel)" },
@@ -29,7 +29,7 @@ export function GrowthSources() {
   const loans = sim.events.filter((e) => e.pay === "laan");
 
   const cards = [
-    { k: "Det vi selv sætter ind", v: own, c: "var(--blue)", t: "Nordnet, pension og afdrag." },
+    { k: "Det vi selv sætter ind", v: own, c: "var(--choc)", t: "Nordnet, pension og afdrag." },
     { k: "Det pengene tjener", v: earned, c: "var(--mint)", t: "Afkast på aktier og pension, og husets værdistigning." },
     {
       k: "Det koster", v: cost, c: "var(--coral)",

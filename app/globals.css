@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
-/* ───────────── BUTTER, COCOA & ELECTRIC BLUE ─────────────
-   Lyng Mandal Kapital. 60 % Butter Yellow, 30 % Dark Cocoa, 10 % Electric Blue.
+/* ───────────── BUTTER & COCOA ─────────────
+   Lyng Mandal Kapital. Butter Yellow og Dark Cocoa, intet andet. Kategorierne skelnes med brune toner.
    Butter er standard. Cocoa, når man selv vælger mørk tilstand (data-theme="dark"). */
 :root {
   --bg: #fbe38e;
@@ -9,17 +9,17 @@
   --surface-2: #f3d46e;
   --ink: #3a2218;
   --muted: #6b4f3c;
-  --accent: #2b5bff;
-  --accent-text: #1e46db;
-  --blue: #2b5bff;
-  --caramel: #b5590f;
+  --accent: #3a2218;
+  --accent-text: #9a4a0c;
+  --choc: #8a5a3b;
+  --caramel: #c8701e;
   --home: #3a2218;
-  --cash: #8fa6ff;
-  --mint: #2f7a1f;
-  --coral: #c8361f;
+  --cash: #e0a83e;
+  --mint: #3f6b12;
+  --coral: #b8361f;
   --line: rgba(58, 34, 24, 0.14);
-  --on-accent: #ffffff;
-  --on-fill: #ffffff;
+  --on-accent: #fbe38e;
+  --on-fill: #fff3c4;
   --glow-a: rgba(255, 249, 226, 0.75);
   --glow-b: rgba(242, 196, 72, 0.45);
   --area: rgba(255, 249, 226, 0.95);
@@ -33,20 +33,20 @@
   --surface-2: #573423;
   --ink: #fbe38e;
   --muted: #d2b88a;
-  --accent: #2b5bff;
-  --accent-text: #93aaff;
-  --blue: #6b8cff;
-  --caramel: #f2a25c;
+  --accent: #fbe38e;
+  --accent-text: #f2a25c;
+  --choc: #b07a52;
+  --caramel: #ee8a3c;
   --home: #fbe38e;
-  --cash: #b9c8ff;
+  --cash: #d9b38c;
   --mint: #b6da74;
   --coral: #ff8a73;
   --line: rgba(251, 227, 142, 0.13);
-  --on-accent: #ffffff;
+  --on-accent: #3a2218;
   --on-fill: #3a2218;
-  --glow-a: rgba(43, 91, 255, 0.24);
+  --glow-a: rgba(242, 162, 92, 0.16);
   --glow-b: rgba(251, 227, 142, 0.07);
-  --area: rgba(43, 91, 255, 0.38);
+  --area: rgba(251, 227, 142, 0.22);
   --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   color-scheme: dark;
 }
@@ -59,7 +59,7 @@
   --color-muted: var(--muted);
   --color-accent: var(--accent);
   --color-accent-text: var(--accent-text);
-  --color-blue: var(--blue);
+  --color-blue: var(--choc);
   --color-mint: var(--mint);
   --color-caramel: var(--caramel);
   --color-coral: var(--coral);

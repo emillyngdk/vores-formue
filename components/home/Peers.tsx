@@ -86,7 +86,7 @@ export function Peers() {
         <Segmented options={[{ value: "nu", label: "I dag" }, { value: "2031", label: "2031 (skøn)" }]} value={when} onChange={setWhen} label="Tidspunkt" />
       </div>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <Strip name="Emil" age={e.age} wealth={now ? peers.emil.ourWealth : peers.projection2031.emil.wealth} marks={e} placement={e.placement} color="var(--blue)" />
+        <Strip name="Emil" age={e.age} wealth={now ? peers.emil.ourWealth : peers.projection2031.emil.wealth} marks={e} placement={e.placement} color="var(--choc)" />
         <Strip name="Frederikke" age={f.age} wealth={now ? peers.frederikke.ourWealth : peers.projection2031.frederikke.wealth} marks={f} placement={f.placement} color="var(--caramel)" />
       </div>
       <p className="mt-4 max-w-3xl text-xs text-muted">

@@ -62,7 +62,7 @@ const BUCKETS: Bucket[] = [
     ].sort((a, b) => b.value - a.value),
   }),
   make({
-    id: "rest", label: "Mad, privat og resten", sub: "Det, der er tilbage på lønkontoen", color: "var(--home)", onColor: "var(--bg)",
+    id: "rest", label: "Mad, privat og resten", sub: "Det, der er tilbage på lønkontoen", color: "var(--choc)", onColor: "var(--on-fill)",
     lines: [
       { label: "Til rådighed", value: restF, who: "Frederikke" },
       { label: "Til rådighed", value: restE, who: "Emil" },

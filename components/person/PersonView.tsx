@@ -15,7 +15,7 @@ type Who = "emil" | "frederikke";
 type Line = { label: string; value: number; note?: string };
 type Block = { id: string; title: string; color: string; lines: Line[]; total: { label: string; value: number } };
 
-const COLOR: Record<Who, string> = { emil: "var(--blue)", frederikke: "var(--caramel)" };
+const COLOR: Record<Who, string> = { emil: "var(--choc)", frederikke: "var(--caramel)" };
 
 /** Opgørelsen for én person i ét år. Alle tal kommer fra regnemotoren, og summen er præcis den samme som motorens. */
 export function blocks(r: YearRow, who: Who): Block[] {
@@ -39,7 +39,7 @@ export function blocks(r: YearRow, who: Who): Block[] {
 
   return [
     { id: "bolig", title: "Boligen", color: "var(--home)", lines: bolig, total: { label: "Din del af friværdien", value: p.equityShare } },
-    { id: "aktier", title: "Aktier", color: "var(--blue)", lines: aktier, total: { label: "Aktier efter skat", value: p.stocksNet } },
+    { id: "aktier", title: "Aktier", color: "var(--choc)", lines: aktier, total: { label: "Aktier efter skat", value: p.stocksNet } },
     { id: "konti", title: "Konti og gæld", color: "var(--cash)", lines: konti, total: { label: "I alt", value: p.cash + p.kontoShare - p.suLoan } },
   ];
 }
@@ -77,7 +77,7 @@ export function PersonView({ who }: { who: Who }) {
   // Sammensætningen som én bjælke. Negative poster (fx SU-lån) står i opgørelsen.
   const parts = [
     { label: "Bolig", value: p.equityShare, color: "var(--home)" },
-    { label: "Aktier", value: p.stocksNet, color: "var(--blue)" },
+    { label: "Aktier", value: p.stocksNet, color: "var(--choc)" },
     { label: "Konti", value: p.cash + p.kontoShare, color: "var(--cash)" },
     { label: "Pension", value: p.pension, color: "var(--caramel)" },
   ];

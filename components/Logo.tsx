@@ -7,7 +7,7 @@ export function Logo({ size = 30 }: { size?: number }) {
         <path d="M116 238L256 120L396 238" fill="none" stroke="#fbe38e" strokeWidth="30" strokeLinecap="round" strokeLinejoin="round" />
         <rect x="326" y="132" width="26" height="54" rx="6" fill="#fbe38e" />
         <path d="M166 280V392H226M264 392V280L306 340L348 280V392" fill="none" stroke="#fbe38e" strokeWidth="30" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M164 446C220 462 290 460 350 436" fill="none" stroke="#2b5bff" strokeWidth="22" strokeLinecap="round" />
+        <path d="M164 446C220 462 290 460 350 436" fill="none" stroke="#fbe38e" strokeWidth="22" strokeLinecap="round" />
       </g>
     </svg>
   );

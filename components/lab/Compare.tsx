@@ -23,7 +23,7 @@ const PRESETS: { id: string; name: string; note: string; color: string; over: Pa
   { id: "god", name: "God", note: "Aktier 9 %, huse 4,5 %, pension 5 %", color: "var(--mint)", over: { houseGrowth: 0.045, stockReturn: 0.09, pensionReturn: 0.05 } },
   { id: "nykredit", name: "Nykredit-optimistisk", note: "Lejligheden stiger 2,5 % om året til salget, hus til 7,1 mio.", color: "var(--caramel)", over: { apartmentGrowth: 0.025, housePrice: 7_100_000 } },
 ];
-const SAVED_COLOR = "var(--blue)";
+const SAVED_COLOR = "var(--choc)";
 
 export function Compare({ year, setYear, withPension, setWithPension }: {
   year: number; setYear: (y: number) => void; withPension: boolean; setWithPension: (v: boolean) => void;
