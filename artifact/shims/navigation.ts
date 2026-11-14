@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from "react";
 
-const VIEWS: Record<string, string> = { overblik: "/", lab: "/lab", spoerg: "/spoerg", huskeliste: "/huskeliste", "check-in": "/check-in" };
+const VIEWS: Record<string, string> = { overblik: "/", lab: "/lab", spoerg: "/spoerg", huskeliste: "/huskeliste", "check-in": "/check-in", emil: "/emil", frederikke: "/frederikke" };
 
 const subscribe = (cb: () => void) => {
   window.addEventListener("hashchange", cb);

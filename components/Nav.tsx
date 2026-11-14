@@ -22,7 +22,8 @@ function Icon({ d }: { d: string }) {
 
 export function Nav() {
   const path = usePathname();
-  const active = (href: string) => (href === "/" ? path === "/" : path.startsWith(href));
+  // Emils og Frederikkes sider hører under Overblik
+  const active = (href: string) => (href === "/" ? path === "/" || path === "/emil" || path === "/frederikke" : path.startsWith(href));
   return (
     <>
       {/* Altid synlig. Som app på hjemmeskærmen ligger den under telefonens statuslinje, så den får plads til den. */}

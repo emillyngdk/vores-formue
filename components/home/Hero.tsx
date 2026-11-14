@@ -1,13 +1,19 @@
 "use client";
 
 import { motion } from "motion/react";
+import Link from "next/link";
 import { Delta } from "@/components/ui/Delta";
 import { Ticker } from "@/components/ui/Ticker";
+import { people } from "@/data/household";
 import { CATEGORIES, parts } from "@/lib/base";
 import { useScenario } from "@/lib/scenario";
 import { WealthLine } from "./WealthLine";
 
 const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
+const PEOPLE = [
+  { key: "emil" as const, name: people.emil.name, color: "var(--violet)" },
+  { key: "frederikke" as const, name: people.frederikke.name, color: "var(--sky)" },
+];
 
 /** Forsiden: formuen i dag, formuen i 2035 og vejen derhen. Regner om, når en antagelse ændres. */
 export function Hero() {
@@ -40,9 +46,11 @@ export function Hero() {
             <dd className="mt-1.5 text-xs text-muted sm:text-sm">
               uden pension <Ticker value={first.wealth} className="text-ink" />
             </dd>
-            <dd className="mt-2 h-6" aria-live="polite">
-              {changed && Math.abs(deltaNow) >= 500 && <Delta v={deltaNow} suffix="mod planen" />}
-            </dd>
+            {changed && Math.abs(deltaNow) >= 500 && (
+              <dd className="mt-2">
+                <Delta v={deltaNow} suffix="mod planen" />
+              </dd>
+            )}
           </div>
           <div className="min-w-0 border-l border-line py-4 pl-4 sm:px-6 sm:py-5">
             <dt className="eyebrow" style={{ color: "var(--accent-text)" }}>
@@ -54,9 +62,11 @@ export function Hero() {
             <dd className="mt-1.5 text-xs text-muted sm:text-sm">
               uden pension <Ticker value={end.wealth} className="text-ink" />
             </dd>
-            <dd className="mt-2 h-6" aria-live="polite">
-              {changed && <Delta v={delta} suffix="mod planen" />}
-            </dd>
+            {changed && (
+              <dd className="mt-2">
+                <Delta v={delta} suffix="mod planen" />
+              </dd>
+            )}
           </div>
           <div className="col-span-2 min-w-0 border-t border-line py-4 sm:col-span-1 sm:border-l sm:border-t-0 sm:py-5 sm:pl-6">
             <dt className="eyebrow">Vækst frem til 2035</dt>
@@ -66,9 +76,34 @@ export function Hero() {
             <dd className="mt-1.5 text-xs text-muted sm:text-sm">
               ca. <Ticker value={yearly} kind="pct" className="text-ink" /> om året, med pension
             </dd>
-            <dd className="mt-2 hidden h-6 sm:block" aria-hidden />
           </div>
         </dl>
+
+        {/* Hver for sig: et tryk viser, hvordan formuen er opgjort */}
+        <div className="mt-4 grid grid-cols-2 gap-3 sm:mt-5 sm:gap-4">
+          {PEOPLE.map((x) => {
+            const r = first[x.key];
+            return (
+              <Link key={x.key} href={`/${x.key}`} className="card group flex min-w-0 flex-col p-4 sm:p-5" aria-label={`${x.name}: se hvordan formuen er opgjort`}>
+                <span className="flex items-center justify-between gap-2">
+                  <span className="flex min-w-0 items-center gap-2 font-semibold">
+                    <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: x.color }} aria-hidden />
+                    <span className="truncate">{x.name}</span>
+                  </span>
+                  <svg aria-hidden viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-muted transition-transform group-hover:translate-x-0.5">
+                    <path d="M9 6l6 6-6 6" />
+                  </svg>
+                </span>
+                <span className="mt-2 text-[clamp(1.05rem,4.6vw,1.75rem)] leading-none">
+                  <Ticker value={r.wealthWithPension} />
+                </span>
+                <span className="mt-1.5 text-xs text-muted">
+                  uden pension <Ticker value={r.wealth} className="text-ink" />
+                </span>
+              </Link>
+            );
+          })}
+        </div>
 
         <div className="mt-6 min-w-0 sm:mt-8">
           <WealthLine />

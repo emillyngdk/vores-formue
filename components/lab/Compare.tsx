@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useMemo, useState } from "react";
 import { Segmented } from "@/components/ui/Segmented";
 import { Ticker } from "@/components/ui/Ticker";
+import { YEARS, YearPicker } from "@/components/ui/YearPicker";
 import { type ScenarioParams, type SimulationResult, simulate } from "@/lib/engine";
 import { signedKr } from "@/lib/format";
 import { useLocalStorage } from "@/lib/hooks";
@@ -23,7 +24,6 @@ const PRESETS: { id: string; name: string; note: string; color: string; over: Pa
   { id: "nykredit", name: "Nykredit-optimistisk", note: "Lejligheden stiger 2,5 % om året til salget, hus til 7,1 mio.", color: "var(--sky)", over: { apartmentGrowth: 0.025, housePrice: 7_100_000 } },
 ];
 const SAVED_COLOR = "var(--violet)";
-const YEARS = Array.from({ length: 10 }, (_, i) => 2026 + i);
 
 export function Compare({ year, setYear, withPension, setWithPension }: {
   year: number; setYear: (y: number) => void; withPension: boolean; setWithPension: (v: boolean) => void;
@@ -91,20 +91,8 @@ export function Compare({ year, setYear, withPension, setWithPension }: {
         <Segmented size="sm" options={[{ value: "med", label: "Med pension" }, { value: "uden", label: "Uden pension" }]} value={withPension ? "med" : "uden"} onChange={(v) => setWithPension(v === "med")} label="Pension" />
       </div>
 
-      {/* Årsvælger */}
-      <div className="mt-5 grid grid-cols-10 rounded-2xl border border-line bg-surface p-1" role="radiogroup" aria-label="Vælg år">
-        {YEARS.map((y) => {
-          const on = y === year;
-          return (
-            <button key={y} type="button" role="radio" aria-checked={on} aria-label={String(y)} onClick={() => setYear(y)} className={`relative min-h-11 rounded-xl text-xs font-semibold transition-colors sm:text-sm ${on ? "text-on-accent" : "text-muted hover:text-ink"}`}>
-              {on && <motion.span layoutId="lab-year" className="absolute inset-0 rounded-xl" style={{ background: "var(--accent)" }} transition={{ type: "spring", stiffness: 420, damping: 34 }} />}
-              <span className="relative num">
-                <span className="sm:hidden">’{String(y).slice(2)}</span>
-                <span className="hidden sm:inline">{y}</span>
-              </span>
-            </button>
-          );
-        })}
+      <div className="mt-5">
+        <YearPicker year={year} setYear={setYear} id="lab-year" />
       </div>
 
       <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-[1.25fr_1fr]">

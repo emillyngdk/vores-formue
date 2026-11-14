@@ -8,6 +8,7 @@ import { Nav } from "@/components/Nav";
 import { Providers } from "@/components/Providers";
 import { Chat } from "@/components/ask/Chat";
 import { Lab } from "@/components/lab/Lab";
+import { PersonView } from "@/components/person/PersonView";
 
 function Huskeliste() {
   return (
@@ -62,6 +63,10 @@ export function App() {
           <Huskeliste />
         ) : path === "/check-in" ? (
           <CheckInView />
+        ) : path === "/emil" || path === "/frederikke" ? (
+          <main>
+            <PersonView who={path === "/emil" ? "emil" : "frederikke"} />
+          </main>
         ) : (
           <Home />
         )}
