@@ -363,3 +363,19 @@ summary,
 .whatif-sheet {
   overscroll-behavior: contain;
 }
+
+/* Bliver hængende øverst på telefon, ligger almindeligt på større skærme */
+@media (max-width: 639px) {
+  .sticky-mobile {
+    position: sticky;
+    top: var(--top-nav);
+    z-index: 20;
+    margin-left: -16px;
+    margin-right: -16px;
+    padding: 8px 16px;
+    background: color-mix(in srgb, var(--bg) 96%, transparent);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+}

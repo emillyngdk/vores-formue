@@ -1,8 +1,9 @@
 "use client";
 
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import Link from "next/link";
 import { useState } from "react";
+import { signedKr } from "@/lib/format";
 import { ScenarioChart } from "@/components/lab/ScenarioChart";
 import { Ticker } from "@/components/ui/Ticker";
 import { YEARS, YearPicker } from "@/components/ui/YearPicker";
@@ -15,7 +16,6 @@ type Line = { label: string; value: number; note?: string };
 type Block = { id: string; title: string; color: string; lines: Line[]; total: { label: string; value: number } };
 
 const COLOR: Record<Who, string> = { emil: "var(--violet)", frederikke: "var(--sky)" };
-const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
 
 /** Opgørelsen for én person i ét år. Alle tal kommer fra regnemotoren, og summen er præcis den samme som motorens. */
 export function blocks(r: YearRow, who: Who): Block[] {
@@ -51,12 +51,28 @@ function Amount({ v, strong }: { v: number; strong?: boolean }) {
 export function PersonView({ who }: { who: Who }) {
   const { sim, changed } = useScenario();
   const [year, setYear] = useState(2026);
+  const [open, setOpen] = useState<Set<string>>(() => new Set());
   const i = year - 2026;
   const r = sim.rows[i];
   const p = r[who];
   const info = people[who];
   const other: Who = who === "emil" ? "frederikke" : "emil";
   const list = blocks(r, who);
+  const start = sim.rows[0][who];
+  const allOpen = open.size === list.length;
+  const toggle = (id: string) =>
+    setOpen((o) => {
+      const n = new Set(o);
+      if (n.has(id)) n.delete(id);
+      else n.add(id);
+      return n;
+    });
+  const since = (v: number) =>
+    i > 0 && (
+      <p className="num mt-1.5 text-xs" style={{ color: v >= 0 ? "var(--mint)" : "var(--coral)" }}>
+        {signedKr(v)} siden 2026
+      </p>
+    );
 
   // Sammensætningen som én bjælke. Negative poster (fx SU-lån) står i opgørelsen.
   const parts = [
@@ -89,7 +105,7 @@ export function PersonView({ who }: { who: Who }) {
                 key={w}
                 href={`/${w}`}
                 aria-current={on ? "page" : undefined}
-                className={`relative flex min-h-10 items-center gap-2 rounded-full px-4 text-sm font-semibold transition-colors ${on ? "text-ink" : "text-muted hover:text-ink"}`}
+                className={`relative flex min-h-11 items-center gap-2 rounded-full px-4 text-sm font-semibold transition-colors ${on ? "text-ink" : "text-muted hover:text-ink"}`}
               >
                 {on && <motion.span layoutId="person-pill" className="absolute inset-0 rounded-full bg-surface-2" transition={{ type: "spring", stiffness: 420, damping: 34 }} />}
                 <span className="relative h-2 w-2 rounded-full" style={{ background: COLOR[w] }} aria-hidden />
@@ -113,18 +129,21 @@ export function PersonView({ who }: { who: Who }) {
             <p className="mt-1.5 text-[clamp(1.3rem,5.4vw,2.6rem)] leading-none">
               <Ticker value={p.wealthWithPension} countUp />
             </p>
+            {since(p.wealthWithPension - start.wealthWithPension)}
           </div>
           <div className="min-w-0 border-l border-line py-4 pl-4 sm:pl-6">
             <p className="eyebrow">Uden pension</p>
             <p className="mt-1.5 text-[clamp(1.3rem,5.4vw,2.6rem)] leading-none">
               <Ticker value={p.wealth} countUp />
             </p>
+            {since(p.wealth - start.wealth)}
           </div>
         </div>
         {changed && <p className="mt-3 text-sm text-muted">Viser det, I har ændret under Hvad nu hvis.</p>}
       </header>
 
-      <div className="mt-6">
+      {/* På telefon bliver årsvælgeren hængende øverst, så man kan skifte år mens man læser opgørelsen */}
+      <div className="sticky-mobile mt-6">
         <YearPicker year={year} setYear={setYear} id="person-year" />
       </div>
 
@@ -151,42 +170,57 @@ export function PersonView({ who }: { who: Who }) {
       <div className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-[1.15fr_1fr]">
         {/* Opgørelsen */}
         <section aria-labelledby="opgoerelse" className="card min-w-0 p-5 sm:p-7">
-          <h2 id="opgoerelse" className="text-lg font-bold">
-            Sådan er den opgjort i oktober {year}
-          </h2>
-          <AnimatePresence mode="popLayout" initial={false}>
-            <motion.div key={`${who}-${r.ownsHouse}`} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.25, ease: EASE }}>
-              {list.map((b) => (
-                <div key={b.id} className="mt-5">
-                  <p className="flex items-center gap-2 text-sm font-semibold">
-                    <span className="h-2.5 w-2.5 rounded-full" style={{ background: b.color }} aria-hidden />
-                    {b.title}
-                  </p>
-                  <dl className="mt-2 space-y-2 text-sm">
-                    {b.lines.map((l) => (
-                      <div key={l.label}>
-                        <div className="flex items-baseline justify-between gap-3">
-                          <dt className="text-muted">{l.label}</dt>
-                          <dd style={l.value < -0.5 ? { color: "var(--coral)" } : undefined}>
-                            <Amount v={l.value} />
-                          </dd>
-                        </div>
-                        {l.note && <p className="text-xs text-muted opacity-80">{l.note}</p>}
-                      </div>
-                    ))}
-                    <div className="flex items-baseline justify-between gap-3 border-t border-line pt-2">
-                      <dt className="font-semibold">{b.total.label}</dt>
-                      <dd>
-                        <Amount v={b.total.value} strong />
-                      </dd>
+          <div className="flex items-start justify-between gap-3">
+            <h2 id="opgoerelse" className="text-lg font-bold leading-snug">
+              Sådan er den opgjort
+              <span className="block text-sm font-normal text-muted">Oktober {year}</span>
+            </h2>
+            <button type="button" onClick={() => setOpen(allOpen ? new Set() : new Set(list.map((b) => b.id)))} className="-mr-2 min-h-11 shrink-0 rounded-full px-3 text-sm font-semibold lg:hidden" style={{ color: "var(--accent-text)" }}>
+              {allOpen ? "Skjul" : "Vis alle"}<span className="hidden min-[380px]:inline"> poster</span>
+            </button>
+          </div>
+          <div className="mt-3 divide-y divide-line">
+            {list.map((b) => {
+              const on = open.has(b.id);
+              return (
+                <div key={b.id}>
+                  <button type="button" onClick={() => toggle(b.id)} aria-expanded={on} className="flex min-h-14 w-full items-center gap-3 py-3 text-left lg:pointer-events-none">
+                    <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: b.color }} aria-hidden />
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-semibold">{b.title}</span>
+                      <span className="block text-xs text-muted">{b.total.label}</span>
+                    </span>
+                    <span style={b.total.value < -0.5 ? { color: "var(--coral)" } : undefined}>
+                      <Amount v={b.total.value} strong />
+                    </span>
+                    <svg aria-hidden viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className={`shrink-0 text-muted transition-transform duration-300 lg:hidden ${on ? "rotate-180" : ""}`}>
+                      <path d="M6 9l6 6 6-6" />
+                    </svg>
+                  </button>
+                  {/* Folder ud med en blød højdeanimation. På store skærme står posterne altid fremme. */}
+                  <div className={`grid transition-[grid-template-rows] duration-300 ease-out lg:grid-rows-[1fr] ${on ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
+                    <div className="min-h-0 overflow-hidden">
+                      <dl className="space-y-2.5 pb-4 pl-[22px] text-sm">
+                        {b.lines.map((l) => (
+                          <div key={l.label}>
+                            <div className="flex items-baseline justify-between gap-3">
+                              <dt className="text-muted">{l.label}</dt>
+                              <dd className="shrink-0" style={l.value < -0.5 ? { color: "var(--coral)" } : undefined}>
+                                <Amount v={l.value} />
+                              </dd>
+                            </div>
+                            {l.note && <p className="mt-0.5 text-xs text-muted opacity-80">{l.note}</p>}
+                          </div>
+                        ))}
+                      </dl>
                     </div>
-                  </dl>
+                  </div>
                 </div>
-              ))}
-            </motion.div>
-          </AnimatePresence>
+              );
+            })}
+          </div>
 
-          <dl className="mt-6 space-y-2 rounded-2xl bg-surface-2 p-4 text-sm">
+          <dl className="mt-4 space-y-2 rounded-2xl bg-surface-2 p-4 text-sm">
             <div className="flex items-baseline justify-between gap-3">
               <dt className="font-semibold">Formue uden pension</dt>
               <dd>

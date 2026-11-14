@@ -1,7 +1,8 @@
 /** Danske talformater: 3.511.015 kr. · 6,41 mio. kr. · 4,77 % */
 const int = new Intl.NumberFormat("da-DK", { maximumFractionDigits: 0 });
 
-export const kr = (n: number) => `${int.format(Math.round(n))} kr.`;
+/** Negative beløb får et rigtigt minustegn */
+export const kr = (n: number) => `${Math.round(n) < 0 ? "−" : ""}${int.format(Math.abs(Math.round(n)))} kr.`;
 
 export const signedKr = (n: number) => `${n < 0 ? "−" : "+"}${int.format(Math.abs(Math.round(n)))} kr.`;
 
