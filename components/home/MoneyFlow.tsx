@@ -55,14 +55,14 @@ const BUCKETS: Bucket[] = [
     note: `Pensionen på ${kr(pension)} om måneden trækkes, før lønnen udbetales, og er ikke med her.`,
   }),
   make({
-    id: "egne", label: "Egne faste udgifter", sub: "A-kasse, billån, abonnementer", color: "var(--steel)", onColor: "var(--on-fill)",
+    id: "egne", label: "Egne faste udgifter", sub: "A-kasse, billån, abonnementer", color: "var(--caramel)", onColor: "var(--on-fill)",
     lines: [
       ...monthlyFlow.personalFixed.frederikke.map((l) => ({ label: l.label, value: l.monthly, who: "Frederikke" as const })),
       ...monthlyFlow.personalFixed.emil.map((l) => ({ label: l.label, value: l.monthly, who: "Emil" as const })),
     ].sort((a, b) => b.value - a.value),
   }),
   make({
-    id: "rest", label: "Mad, privat og resten", sub: "Det, der er tilbage på lønkontoen", color: "var(--copper)", onColor: "var(--on-fill)",
+    id: "rest", label: "Mad, privat og resten", sub: "Det, der er tilbage på lønkontoen", color: "var(--home)", onColor: "var(--bg)",
     lines: [
       { label: "Til rådighed", value: restF, who: "Frederikke" },
       { label: "Til rådighed", value: restE, who: "Emil" },
@@ -130,7 +130,7 @@ export function MoneyFlow() {
           <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
             <div>
               <p className="eyebrow">Ind hver måned</p>
-              <p className="mt-1 text-[clamp(2rem,8vw,3.5rem)] leading-none">
+              <p className="fig mt-1 text-[clamp(2rem,8vw,3.5rem)] leading-none">
                 <Ticker value={INCOME} countUp />
               </p>
             </div>
@@ -210,7 +210,7 @@ export function MoneyFlow() {
               <motion.div key={active.id} initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -8 }} transition={{ duration: 0.22 }}>
                 <p className="eyebrow">{active.sub}</p>
                 <h3 className="mt-1 text-2xl font-bold">{active.label}</h3>
-                <p className="num mt-1 text-3xl" style={{ color: active.color === "var(--accent)" ? "var(--accent-text)" : active.color }}>
+                <p className="fig num mt-1 text-4xl" style={{ color: active.color === "var(--accent)" ? "var(--accent-text)" : active.color }}>
                   {kr(active.total)}
                 </p>
                 <div className="mt-6">

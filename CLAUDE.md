@@ -25,5 +25,6 @@ Statiske tekster med tal: `peers` i `data/household.ts` (sammenligningen med jæ
 - `lib/variables.ts`: alle variabler i lab'et (navn, interval, format). En ny variabel skal både i `ScenarioParams` og `BASE` i motoren, i `KEYS` og `LIMITS` i `lib/scenario-url.ts` og her. Planens værdier hentes fra `data/household.ts`.
 - `components/home/`: forsiden. `components/whatif/`: bjælken og skuffen. `components/lab/`, `components/ask/`: lab og Spørg Claude.
 - `design/ikon.mjs`: tegner app-ikonerne (huset med LM). Køres kun, når ikonet ændres.
-- Udtryk: skovgrøn og guld. Farverne er tokens i `app/globals.css` (`--accent` guld, `--copper` aktier/Emil, `--steel` pension/Frederikke, `--mint` bolig/plus, `--coral` minus). Skrift: Poppins overalt, overskrifter med store bogstaver (`.display`).
+- Udtryk: Butter Yellow (60 %), Dark Cocoa (30 %), Electric Blue (10 %). Butter er standard, cocoa er mørk tilstand. Farverne er tokens i `app/globals.css` (`--accent` blå til knapper og hovedlinjen, `--home` bolig, `--blue` aktier/Emil, `--cash` konti, `--caramel` pension/Frederikke, `--mint` plus, `--coral` minus).
+- Skrift: Anton til overskrifter og store tal (`.display`, `.fig`), DM Mono til små mærkater (`.eyebrow`), Poppins til resten.
 - `artifact/`: bygger den udgave, der kan vises som artifact i Claude (`npm run artifact`).

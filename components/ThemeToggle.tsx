@@ -5,12 +5,12 @@ import { useEffect, useState } from "react";
 type Theme = "dark" | "light";
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
     const set = document.documentElement.dataset.theme as Theme | undefined;
-    if (set) setTheme(set);
-    else setTheme(window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+    // Butter er standard. Mørk (cocoa) kun, når man selv har valgt den.
+    setTheme(set === "dark" ? "dark" : "light");
   }, []);
 
   const toggle = () => {

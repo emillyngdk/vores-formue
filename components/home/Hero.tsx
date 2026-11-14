@@ -7,12 +7,13 @@ import { Ticker } from "@/components/ui/Ticker";
 import { people } from "@/data/household";
 import { CATEGORIES, parts } from "@/lib/base";
 import { useScenario } from "@/lib/scenario";
+import { Sticker } from "./Sticker";
 import { WealthLine } from "./WealthLine";
 
 const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
 const PEOPLE = [
-  { key: "emil" as const, name: people.emil.name, color: "var(--copper)" },
-  { key: "frederikke" as const, name: people.frederikke.name, color: "var(--steel)" },
+  { key: "emil" as const, name: people.emil.name, color: "var(--blue)" },
+  { key: "frederikke" as const, name: people.frederikke.name, color: "var(--caramel)" },
 ];
 
 /** Forsiden: formuen i dag, formuen i 2035 og vejen derhen. Regner om, når en antagelse ændres. */
@@ -32,15 +33,18 @@ export function Hero() {
     <section aria-labelledby="hero-title" className="hero-glow">
       <div className="mx-auto max-w-[1280px] px-4 pb-10 pt-6 sm:px-6 sm:pb-16 sm:pt-12">
         <p className="eyebrow">Emil og Frederikke · tal pr. oktober 2026</p>
-        <h1 id="hero-title" className="display mt-3 text-[clamp(2rem,8.6vw,5.25rem)] leading-[1.06]">
-          Vores formue
-        </h1>
+        <div className="mt-3 flex items-center justify-between gap-4">
+          <h1 id="hero-title" className="display min-w-0 text-[clamp(2.9rem,13.5vw,8rem)] leading-[0.95]">
+            Vores formue
+          </h1>
+          <Sticker value={yearly} />
+        </div>
 
         {/* Tre tal på én linje: i dag, 2035 og væksten imellem */}
         <dl className="mt-6 grid grid-cols-2 border-y border-line sm:mt-8 sm:grid-cols-3">
           <div className="min-w-0 py-4 pr-4 sm:py-5 sm:pr-6">
             <dt className="eyebrow">I dag</dt>
-            <dd className="mt-1.5 text-[clamp(1.3rem,5.4vw,2.6rem)] leading-none">
+            <dd className="fig mt-1.5 text-[clamp(1.7rem,7vw,3.4rem)] leading-none">
               <Ticker value={first.wealthWithPension} countUp />
             </dd>
             <dd className="mt-1.5 text-xs text-muted sm:text-sm">
@@ -56,7 +60,7 @@ export function Hero() {
             <dt className="eyebrow" style={{ color: "var(--accent-text)" }}>
               Oktober 2035
             </dt>
-            <dd className="mt-1.5 text-[clamp(1.3rem,5.4vw,2.6rem)] leading-none" style={{ color: "var(--accent-text)" }}>
+            <dd className="fig mt-1.5 text-[clamp(1.7rem,7vw,3.4rem)] leading-none" style={{ color: "var(--accent-text)" }}>
               <Ticker value={end.wealthWithPension} countUp />
             </dd>
             <dd className="mt-1.5 text-xs text-muted sm:text-sm">
@@ -70,7 +74,7 @@ export function Hero() {
           </div>
           <div className="col-span-2 min-w-0 border-t border-line py-4 sm:col-span-1 sm:border-l sm:border-t-0 sm:py-5 sm:pl-6">
             <dt className="eyebrow">Vækst frem til 2035</dt>
-            <dd className="mt-1.5 text-[clamp(1.3rem,5.4vw,2.6rem)] leading-none" style={{ color: "var(--mint)" }}>
+            <dd className="fig mt-1.5 text-[clamp(1.7rem,7vw,3.4rem)] leading-none" style={{ color: "var(--mint)" }}>
               <Ticker value={growth} kind="signedKr" />
             </dd>
             <dd className="mt-1.5 text-xs text-muted sm:text-sm">
@@ -94,7 +98,7 @@ export function Hero() {
                     <path d="M9 6l6 6-6 6" />
                   </svg>
                 </span>
-                <span className="mt-2 text-[clamp(1.05rem,4.6vw,1.75rem)] leading-none">
+                <span className="fig mt-2 text-[clamp(1.45rem,6.2vw,2.3rem)] leading-none">
                   <Ticker value={r.wealthWithPension} />
                 </span>
                 <span className="mt-1.5 text-xs text-muted">
@@ -122,7 +126,7 @@ export function Hero() {
                 <span className="h-2.5 w-2.5 rounded-full" style={{ background: c.color }} aria-hidden />
                 {c.label}
               </p>
-              <p className="mt-2 text-[clamp(1.15rem,4.6vw,1.75rem)] leading-none">
+              <p className="fig mt-2 text-[clamp(1.5rem,6vw,2.3rem)] leading-none">
                 <Ticker value={then[i]} kind="mio" />
               </p>
               <p className="mt-1.5 text-xs text-muted">

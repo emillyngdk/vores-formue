@@ -15,7 +15,7 @@ type Who = "emil" | "frederikke";
 type Line = { label: string; value: number; note?: string };
 type Block = { id: string; title: string; color: string; lines: Line[]; total: { label: string; value: number } };
 
-const COLOR: Record<Who, string> = { emil: "var(--copper)", frederikke: "var(--steel)" };
+const COLOR: Record<Who, string> = { emil: "var(--blue)", frederikke: "var(--caramel)" };
 
 /** Opgørelsen for én person i ét år. Alle tal kommer fra regnemotoren, og summen er præcis den samme som motorens. */
 export function blocks(r: YearRow, who: Who): Block[] {
@@ -38,9 +38,9 @@ export function blocks(r: YearRow, who: Who): Block[] {
   if (p.suLoan > 0.5) konti.push({ label: "SU-lån", value: -p.suLoan });
 
   return [
-    { id: "bolig", title: "Boligen", color: "var(--mint)", lines: bolig, total: { label: "Din del af friværdien", value: p.equityShare } },
-    { id: "aktier", title: "Aktier", color: "var(--copper)", lines: aktier, total: { label: "Aktier efter skat", value: p.stocksNet } },
-    { id: "konti", title: "Konti og gæld", color: "var(--accent)", lines: konti, total: { label: "I alt", value: p.cash + p.kontoShare - p.suLoan } },
+    { id: "bolig", title: "Boligen", color: "var(--home)", lines: bolig, total: { label: "Din del af friværdien", value: p.equityShare } },
+    { id: "aktier", title: "Aktier", color: "var(--blue)", lines: aktier, total: { label: "Aktier efter skat", value: p.stocksNet } },
+    { id: "konti", title: "Konti og gæld", color: "var(--cash)", lines: konti, total: { label: "I alt", value: p.cash + p.kontoShare - p.suLoan } },
   ];
 }
 
@@ -76,10 +76,10 @@ export function PersonView({ who }: { who: Who }) {
 
   // Sammensætningen som én bjælke. Negative poster (fx SU-lån) står i opgørelsen.
   const parts = [
-    { label: "Bolig", value: p.equityShare, color: "var(--mint)" },
-    { label: "Aktier", value: p.stocksNet, color: "var(--copper)" },
-    { label: "Konti", value: p.cash + p.kontoShare, color: "var(--accent)" },
-    { label: "Pension", value: p.pension, color: "var(--steel)" },
+    { label: "Bolig", value: p.equityShare, color: "var(--home)" },
+    { label: "Aktier", value: p.stocksNet, color: "var(--blue)" },
+    { label: "Konti", value: p.cash + p.kontoShare, color: "var(--cash)" },
+    { label: "Pension", value: p.pension, color: "var(--caramel)" },
   ];
   const positive = parts.reduce((a, x) => a + Math.max(x.value, 0), 0) || 1;
 
@@ -126,14 +126,14 @@ export function PersonView({ who }: { who: Who }) {
         <div className="mt-5 grid grid-cols-2 border-y border-line">
           <div className="min-w-0 py-4 pr-4">
             <p className="eyebrow">Med pension</p>
-            <p className="mt-1.5 text-[clamp(1.3rem,5.4vw,2.6rem)] leading-none">
+            <p className="fig mt-1.5 text-[clamp(1.3rem,5.4vw,2.6rem)] leading-none">
               <Ticker value={p.wealthWithPension} countUp />
             </p>
             {since(p.wealthWithPension - start.wealthWithPension)}
           </div>
           <div className="min-w-0 border-l border-line py-4 pl-4 sm:pl-6">
             <p className="eyebrow">Uden pension</p>
-            <p className="mt-1.5 text-[clamp(1.3rem,5.4vw,2.6rem)] leading-none">
+            <p className="fig mt-1.5 text-[clamp(1.3rem,5.4vw,2.6rem)] leading-none">
               <Ticker value={p.wealth} countUp />
             </p>
             {since(p.wealth - start.wealth)}

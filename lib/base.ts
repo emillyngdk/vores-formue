@@ -8,10 +8,10 @@ export const baseGrowth = growthBreakdown(base);
 export type View = "os" | "emil" | "frederikke";
 
 export const CATEGORIES = [
-  { key: "equity", label: "Friværdi", color: "var(--mint)" },
-  { key: "stocks", label: "Aktier", color: "var(--copper)" },
-  { key: "accounts", label: "Konti", color: "var(--accent)" },
-  { key: "pension", label: "Pension", color: "var(--steel)" },
+  { key: "equity", label: "Friværdi", color: "var(--home)" },
+  { key: "stocks", label: "Aktier", color: "var(--blue)" },
+  { key: "accounts", label: "Konti", color: "var(--cash)" },
+  { key: "pension", label: "Pension", color: "var(--caramel)" },
 ] as const;
 
 /** De fire dele af formuen for et år, samlet eller for én person */

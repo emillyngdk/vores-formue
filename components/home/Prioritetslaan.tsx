@@ -26,14 +26,14 @@ export function Prioritetslaan() {
           <div className="grid gap-6 sm:grid-cols-2">
             <div>
               <p className="eyebrow">Effektiv rente</p>
-              <p className="mt-1 text-[clamp(2.6rem,9vw,4.5rem)] leading-none" style={{ color: "var(--accent-text)" }}>
+              <p className="fig mt-1 text-[clamp(2.6rem,9vw,4.5rem)] leading-none" style={{ color: "var(--accent-text)" }}>
                 <Ticker value={cost.effectiveRate} kind="pct" />
               </p>
               <p className="mt-2 text-sm text-muted">efter kontorente og boligrabat</p>
             </div>
             <div>
               <p className="eyebrow">Nettorente pr. måned</p>
-              <p className="mt-1 text-[clamp(1.8rem,6vw,2.75rem)] leading-none">
+              <p className="fig mt-1 text-[clamp(1.8rem,6vw,2.75rem)] leading-none">
                 <Ticker value={cost.monthly} />
               </p>
               <p className="mt-2 text-sm" style={{ color: atToday ? "var(--muted)" : diff > 0 ? "var(--coral)" : "var(--mint)" }}>

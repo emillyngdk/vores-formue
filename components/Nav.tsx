@@ -32,7 +32,7 @@ export function Nav() {
         <div className="mx-auto flex h-14 max-w-[1280px] items-center justify-between px-4 sm:px-6 md:h-16">
           <Link href="/" className="flex min-h-11 min-w-0 items-center gap-2.5" aria-label="Lyng Mandal Kapital, til forsiden">
             <Logo />
-            <span className="display truncate text-sm leading-none tracking-[0.12em]">Lyng Mandal Kapital</span>
+            <span className="display truncate pt-0.5 text-[19px] leading-none tracking-[0.03em] sm:text-xl">Lyng Mandal Kapital</span>
           </Link>
           <nav aria-label="Hovedmenu" className="hidden items-center gap-1 md:flex">
             {LINKS.map((l) => (

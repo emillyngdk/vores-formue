@@ -32,8 +32,8 @@ function build(rows: YearRow[]): Datum[] {
 }
 
 const PARTS = [
-  { key: "own", label: "Indbetalt", color: "var(--copper)", opacity: 1 },
-  { key: "sale", label: "Fra boligsalget", color: "var(--copper)", opacity: 0.55 },
+  { key: "own", label: "Indbetalt", color: "var(--blue)", opacity: 1 },
+  { key: "sale", label: "Fra boligsalget", color: "var(--blue)", opacity: 0.55 },
   { key: "gainNet", label: "Afkast efter skat", color: "var(--mint)", opacity: 1 },
   { key: "tax", label: "Skat hvis solgt", color: "var(--coral)", opacity: 1 },
 ] as const;
@@ -111,7 +111,7 @@ function AskCompare() {
   const r = askVsDepot(amount, 0.07, years);
   const rows = [
     { label: "Aktiesparekonto", sub: "17 % af årets afkast", v: r.ask, color: "var(--mint)" },
-    { label: "Frit depot, 27 %", sub: "gevinst under 79.400 kr.", v: r.depotLow, color: "var(--copper)" },
+    { label: "Frit depot, 27 %", sub: "gevinst under 79.400 kr.", v: r.depotLow, color: "var(--blue)" },
     { label: "Frit depot, 42 %", sub: "gevinst over 79.400 kr.", v: r.depotHigh, color: "var(--coral)" },
   ];
   const cap = taxRules2026.aktiesparekonto;
@@ -173,7 +173,7 @@ export function Stocks() {
         </div>
         <div className="card p-6">
           <p className="eyebrow">Oktober {d.year} · efter skat</p>
-          <p className="mt-1 text-[clamp(1.9rem,6.5vw,2.75rem)] leading-none" style={{ color: "var(--copper)" }}>
+          <p className="fig mt-1 text-[clamp(1.9rem,6.5vw,2.75rem)] leading-none" style={{ color: "var(--blue)" }}>
             <Ticker value={d.net} />
           </p>
           <dl className="mt-5 space-y-2 text-sm">

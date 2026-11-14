@@ -196,7 +196,7 @@ export function YearByYear() {
                     {who} formue · oktober {row.year}
                     {row.year === moveYear && <span style={{ color: "var(--accent-text)" }}> · hus</span>}
                   </p>
-                  <p className="mt-1 text-[clamp(1.7rem,6vw,3rem)] leading-none" style={{ color: "var(--accent-text)" }}>
+                  <p className="fig mt-1 text-[clamp(1.7rem,6vw,3rem)] leading-none" style={{ color: "var(--accent-text)" }}>
                     <Ticker value={totalOf(row, view, true)} />
                   </p>
                 </div>
@@ -255,7 +255,7 @@ export function YearByYear() {
                   <td className="num hidden px-3 py-3 font-medium md:table-cell">{kr(r.emil.wealth)}</td>
                   <td className="num hidden px-3 py-3 font-medium md:table-cell">{kr(r.frederikke.wealth)}</td>
                   <td className="num px-3 py-3">{kr(r.wealth)}</td>
-                  <td className="num hidden px-3 py-3 font-medium lg:table-cell" style={{ color: "var(--steel)" }}>{kr(r.pension)}</td>
+                  <td className="num hidden px-3 py-3 font-medium lg:table-cell" style={{ color: "var(--caramel)" }}>{kr(r.pension)}</td>
                   <td className="num px-3 py-3 sm:px-6" style={{ color: "var(--mint)" }}>{kr(r.wealthWithPension)}</td>
                 </tr>
               ))}

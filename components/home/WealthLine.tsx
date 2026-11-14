@@ -80,8 +80,8 @@ export function WealthLine() {
           >
             <defs>
               <linearGradient id="hero-fill" x1="0" x2="0" y1="0" y2="1">
-                <stop offset="0" stopColor="var(--accent)" stopOpacity="0.38" />
-                <stop offset="1" stopColor="var(--accent)" stopOpacity="0" />
+                <stop offset="0" stopColor="var(--area)" stopOpacity="1" />
+                <stop offset="1" stopColor="var(--area)" stopOpacity="0" />
               </linearGradient>
               <clipPath id="hero-reveal">
                 <motion.rect x={0} y={0} height={height} initial={{ width: 0 }} animate={{ width: width + 20 }} transition={reduced ? { duration: 0 } : { duration: 1.5, ease: [0.65, 0, 0.35, 1], delay: 0.15 }} />

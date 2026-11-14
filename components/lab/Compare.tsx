@@ -21,9 +21,9 @@ type Item = { id: string; name: string; note: string; color: string; params: Sce
 const PRESETS: { id: string; name: string; note: string; color: string; over: Partial<ScenarioParams> }[] = [
   { id: "forsigtig", name: "Forsigtig", note: "Lejligheden 6,75 mio., aktier 5 %, huse 1,5 %", color: "var(--coral)", over: { apartmentValue: 6_750_000, houseGrowth: 0.015, stockReturn: 0.05, pensionReturn: 0.03 } },
   { id: "god", name: "God", note: "Aktier 9 %, huse 4,5 %, pension 5 %", color: "var(--mint)", over: { houseGrowth: 0.045, stockReturn: 0.09, pensionReturn: 0.05 } },
-  { id: "nykredit", name: "Nykredit-optimistisk", note: "Lejligheden stiger 2,5 % om året til salget, hus til 7,1 mio.", color: "var(--steel)", over: { apartmentGrowth: 0.025, housePrice: 7_100_000 } },
+  { id: "nykredit", name: "Nykredit-optimistisk", note: "Lejligheden stiger 2,5 % om året til salget, hus til 7,1 mio.", color: "var(--caramel)", over: { apartmentGrowth: 0.025, housePrice: 7_100_000 } },
 ];
-const SAVED_COLOR = "var(--copper)";
+const SAVED_COLOR = "var(--blue)";
 
 export function Compare({ year, setYear, withPension, setWithPension }: {
   year: number; setYear: (y: number) => void; withPension: boolean; setWithPension: (v: boolean) => void;

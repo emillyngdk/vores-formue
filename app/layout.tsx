@@ -4,6 +4,8 @@ import "@fontsource/poppins/500.css";
 import "@fontsource/poppins/600.css";
 import "@fontsource/poppins/700.css";
 import "@fontsource/poppins/800.css";
+import "@fontsource/anton/latin-400.css";
+import "@fontsource/dm-mono/latin-500.css";
 import "./globals.css";
 import { Nav } from "@/components/Nav";
 import { Providers } from "@/components/Providers";
@@ -16,10 +18,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#0a1d17" },
-    { media: "(prefers-color-scheme: light)", color: "#f4f0e6" },
-  ],
+  themeColor: "#fbe38e",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",

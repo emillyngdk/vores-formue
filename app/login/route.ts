@@ -27,27 +27,29 @@ export async function GET(req: Request) {
 <title>Log ind · Lyng Mandal Kapital</title>
 <link rel="icon" href="/icons/icon-192.png" />
 <style>
-  :root { color-scheme: dark; }
+  @font-face { font-family: "Anton"; font-weight: 400; font-display: swap; src: url(/fonts/anton-latin-400-normal.woff2) format("woff2"); }
+  :root { color-scheme: light; }
   * { box-sizing: border-box; }
-  body { margin: 0; min-height: 100dvh; display: grid; place-items: center; padding: 16px; background: #0a1d17; color: #f4efe3;
+  body { margin: 0; min-height: 100dvh; display: grid; place-items: center; padding: 16px; background: #fbe38e; color: #fbe38e;
     font-family: Poppins, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-    background-image: radial-gradient(40% 40% at 30% 30%, rgba(226,181,79,.14), transparent 70%), radial-gradient(45% 45% at 70% 70%, rgba(47,138,97,.32), transparent 70%); }
-  main { width: 100%; max-width: 400px; background: #10291f; border: 1px solid rgba(244,239,227,.09); border-radius: 28px; padding: 32px; }
-  h1 { margin: 0 0 6px; font-size: 1.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: -.02em; line-height: 1.05; }
-  .sub { margin: 0 0 28px; color: #9db1a6; }
+    background-image: radial-gradient(40% 40% at 25% 20%, rgba(255,250,230,.7), transparent 70%), radial-gradient(40% 40% at 75% 85%, rgba(43,91,255,.14), transparent 70%); }
+  main { width: 100%; max-width: 400px; background: #3a2218; border: 0; box-shadow: 0 24px 60px rgba(58,34,24,.25); border-radius: 28px; padding: 32px; }
+  h1 { margin: 0 0 8px; font-family: Anton, "Arial Narrow", Impact, sans-serif; font-size: 2.6rem; font-weight: 400; text-transform: uppercase; letter-spacing: .005em; line-height: 1; }
+  .bar { display: block; width: 120px; height: 6px; border-radius: 6px; background: #2b5bff; margin: 0 0 18px; transform: rotate(-2deg); }
+  .sub { margin: 0 0 28px; color: #d2b88a; }
   label { display: block; font-size: .875rem; font-weight: 600; margin-bottom: 6px; }
-  input { width: 100%; min-height: 52px; border-radius: 16px; border: 1px solid rgba(244,239,227,.14); background: #173628; color: inherit; font-size: 1rem; padding: 0 16px; }
-  input:focus-visible, button:focus-visible { outline: 2px solid #e2b54f; outline-offset: 3px; }
-  .go { width: 100%; min-height: 52px; margin-top: 20px; border: 0; border-radius: 999px; background: #e2b54f; color: #0a1d17; font-size: 1rem; font-weight: 700; cursor: pointer; }
+  input { width: 100%; min-height: 52px; border-radius: 16px; border: 1px solid rgba(251,227,142,.18); background: #46291d; color: inherit; font-size: 1rem; padding: 0 16px; }
+  input:focus-visible, button:focus-visible { outline: 2px solid #2b5bff; outline-offset: 3px; }
+  .go { width: 100%; min-height: 52px; margin-top: 20px; border: 0; border-radius: 999px; background: #2b5bff; color: #ffffff; font-size: 1rem; font-weight: 700; cursor: pointer; }
   .field { position: relative; }
   .field input { padding-right: 56px; }
-  .eye { position: absolute; right: 4px; top: 4px; width: 44px; height: 44px; display: grid; place-items: center; border: 0; border-radius: 12px; background: transparent; color: #9db1a6; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .eye { position: absolute; right: 4px; top: 4px; width: 44px; height: 44px; display: grid; place-items: center; border: 0; border-radius: 12px; background: transparent; color: #d2b88a; cursor: pointer; -webkit-tap-highlight-color: transparent; }
   .eye[hidden] { display: none; }
   .eye .off, .eye[aria-pressed="true"] .on { display: none; }
   .eye[aria-pressed="true"] .off { display: block; }
-  .eye[aria-pressed="true"] { color: #f4efe3; }
-  .err { color: #f0727a; font-size: .875rem; font-weight: 600; margin: 10px 0 0; }
-  .msg { color: #9db1a6; margin: 0; }
+  .eye[aria-pressed="true"] { color: #fbe38e; }
+  .err { color: #ff8a73; font-size: .875rem; font-weight: 600; margin: 10px 0 0; }
+  .msg { color: #d2b88a; margin: 0; }
   .mark { display: block; margin: 0 0 20px; border-radius: 18px; }
 </style>
 </head>
@@ -55,6 +57,7 @@ export async function GET(req: Request) {
 <main>
   <img class="mark" src="/icons/icon-192.png" width="72" height="72" alt="" />
   <h1>Lyng Mandal Kapital</h1>
+  <span class="bar" aria-hidden="true"></span>
   <p class="sub">Privat side. Log ind for at fortsætte.</p>
   ${body}
 </main>

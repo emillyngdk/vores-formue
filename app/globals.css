@@ -1,71 +1,54 @@
 @import "tailwindcss";
 
-/* ───────────── SKOV & GULD ─────────────
-   Lyng Mandal Kapital. Mørk skovgrøn er standard.
-   Lys via data-theme="light" eller systemets lyse tilstand, når intet er valgt. */
+/* ───────────── BUTTER, COCOA & ELECTRIC BLUE ─────────────
+   Lyng Mandal Kapital. 60 % Butter Yellow, 30 % Dark Cocoa, 10 % Electric Blue.
+   Butter er standard. Cocoa, når man selv vælger mørk tilstand (data-theme="dark"). */
 :root {
-  --bg: #0a1d17;
-  --surface: #10291f;
-  --surface-2: #173628;
-  --ink: #f4efe3;
-  --muted: #9db1a6;
-  --accent: #e2b54f;
-  --accent-text: #e8bd55;
-  --copper: #e3955f;
-  --mint: #8ed6a0;
-  --steel: #8ab8e6;
-  --coral: #f0727a;
-  --line: rgba(244, 239, 227, 0.09);
-  --on-accent: #0a1d17;
-  --on-fill: #0a1d17;
-  --glow-a: rgba(226, 181, 79, 0.14);
-  --glow-b: rgba(47, 138, 97, 0.3);
-  --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-  color-scheme: dark;
-}
-
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) {
-  --bg: #f4f0e6;
-  --surface: #ffffff;
-  --surface-2: #ebe5d6;
-  --ink: #12261d;
-  --muted: #56685e;
-  --accent: #c9972f;
-  --accent-text: #7a5a12;
-  --copper: #b0552a;
-  --mint: #1d7a49;
-  --steel: #2c6aa3;
-  --coral: #c2393f;
-  --line: rgba(18, 38, 29, 0.1);
-  --on-accent: #12261d;
+  --bg: #fbe38e;
+  --surface: #fff3c4;
+  --surface-2: #f3d46e;
+  --ink: #3a2218;
+  --muted: #6b4f3c;
+  --accent: #2b5bff;
+  --accent-text: #1e46db;
+  --blue: #2b5bff;
+  --caramel: #b5590f;
+  --home: #3a2218;
+  --cash: #8fa6ff;
+  --mint: #2f7a1f;
+  --coral: #c8361f;
+  --line: rgba(58, 34, 24, 0.14);
+  --on-accent: #ffffff;
   --on-fill: #ffffff;
-  --glow-a: rgba(201, 151, 47, 0.16);
-  --glow-b: rgba(29, 122, 73, 0.12);
-  --shadow: 0 10px 30px rgba(18, 38, 29, 0.08);
-    color-scheme: light;
-  }
-}
-
-:root[data-theme="light"] {
-  --bg: #f4f0e6;
-  --surface: #ffffff;
-  --surface-2: #ebe5d6;
-  --ink: #12261d;
-  --muted: #56685e;
-  --accent: #c9972f;
-  --accent-text: #7a5a12;
-  --copper: #b0552a;
-  --mint: #1d7a49;
-  --steel: #2c6aa3;
-  --coral: #c2393f;
-  --line: rgba(18, 38, 29, 0.1);
-  --on-accent: #12261d;
-  --on-fill: #ffffff;
-  --glow-a: rgba(201, 151, 47, 0.16);
-  --glow-b: rgba(29, 122, 73, 0.12);
-  --shadow: 0 10px 30px rgba(18, 38, 29, 0.08);
+  --glow-a: rgba(255, 249, 226, 0.75);
+  --glow-b: rgba(242, 196, 72, 0.45);
+  --area: rgba(255, 249, 226, 0.95);
+  --shadow: 0 10px 30px rgba(58, 34, 24, 0.12);
   color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --bg: #3a2218;
+  --surface: #46291d;
+  --surface-2: #573423;
+  --ink: #fbe38e;
+  --muted: #d2b88a;
+  --accent: #2b5bff;
+  --accent-text: #93aaff;
+  --blue: #6b8cff;
+  --caramel: #f2a25c;
+  --home: #fbe38e;
+  --cash: #b9c8ff;
+  --mint: #b6da74;
+  --coral: #ff8a73;
+  --line: rgba(251, 227, 142, 0.13);
+  --on-accent: #ffffff;
+  --on-fill: #3a2218;
+  --glow-a: rgba(43, 91, 255, 0.24);
+  --glow-b: rgba(251, 227, 142, 0.07);
+  --area: rgba(43, 91, 255, 0.38);
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -76,13 +59,15 @@
   --color-muted: var(--muted);
   --color-accent: var(--accent);
   --color-accent-text: var(--accent-text);
-  --color-violet: var(--copper);
+  --color-blue: var(--blue);
   --color-mint: var(--mint);
-  --color-sky: var(--steel);
+  --color-caramel: var(--caramel);
   --color-coral: var(--coral);
   --color-line: var(--line);
   --color-on-accent: var(--on-accent);
   --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Anton", "Arial Narrow", Impact, sans-serif;
+  --font-mono: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
 }
 
 html {
@@ -110,11 +95,19 @@ body::before {
 }
 
 .display {
-  font-weight: 800;
+  font-family: var(--font-display);
+  font-weight: 400;
   text-transform: uppercase;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.005em;
   /* Plads til ringen i Å, så den ikke rammer linjen over */
-  line-height: 1.02;
+  line-height: 1.04;
+}
+/* Store tal i samme smalle skrift som overskrifterne */
+.fig,
+.fig .num {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.01em;
 }
 
 .num {
@@ -125,9 +118,10 @@ body::before {
 }
 
 .eyebrow {
-  font-weight: 600;
+  font-family: var(--font-mono);
+  font-weight: 500;
   font-size: 0.75rem;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--muted);
 }
@@ -260,22 +254,14 @@ body::before {
 
 :root {
   --top-nav: calc(56px + env(safe-area-inset-top, 0px));
-  --status-band: var(--bg);
+  --status-band: #3a2218;
 }
 @media (min-width: 768px) {
   :root {
     --top-nav: calc(64px + env(safe-area-inset-top, 0px));
   }
 }
-/* Telefonens statuslinje har hvid tekst, når siden er lagt på hjemmeskærmen. I lyst tema får den en mørk baggrund. */
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) {
-    --status-band: #0f3b2e;
-  }
-}
-:root[data-theme="light"] {
-  --status-band: #0f3b2e;
-}
+/* Telefonens statuslinje har hvid tekst, når siden er lagt på hjemmeskærmen. Derfor altid en cocoa-stribe bag den. */
 .status-band {
   position: absolute;
   inset: 0 0 auto;
@@ -377,5 +363,26 @@ summary,
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--line);
+  }
+}
+
+/* ───────────── Mærket ved overskriften ───────────── */
+.sticker {
+  width: clamp(76px, 21vw, 168px);
+  height: clamp(76px, 21vw, 168px);
+  transform: rotate(-8deg);
+}
+.sticker-spin {
+  transform-origin: 100px 100px;
+  animation: sticker-spin 24s linear infinite;
+}
+@keyframes sticker-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sticker-spin {
+    animation: none;
   }
 }

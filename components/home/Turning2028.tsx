@@ -85,7 +85,7 @@ export function Turning2028() {
         <div className="grid content-start gap-4">
           <div className="card p-6" style={{ borderColor: "color-mix(in srgb, var(--mint) 45%, transparent)" }}>
             <p className="eyebrow">Til hver af os</p>
-            <p className="mt-2 text-[clamp(2rem,7vw,3rem)] leading-none" style={{ color: s.perPerson < 0 ? "var(--coral)" : "var(--mint)" }}>
+            <p className="fig mt-2 text-[clamp(2rem,7vw,3rem)] leading-none" style={{ color: s.perPerson < 0 ? "var(--coral)" : "var(--mint)" }}>
               <Ticker value={s.perPerson} countUp />
             </p>
             <p className="mt-3 text-sm text-muted">
@@ -96,7 +96,7 @@ export function Turning2028() {
           </div>
           <div className="card p-6" style={{ borderColor: "color-mix(in srgb, var(--accent) 50%, transparent)" }}>
             <p className="eyebrow" style={{ color: "var(--accent-text)" }}>{extra < 0 ? "Huset koster mindre om måneden" : "Huset koster mere om måneden"}</p>
-            <p className="num mt-2 text-3xl">{extra < 0 ? "−" : "+"}{kr(Math.abs(extra))}</p>
+            <p className="fig num mt-2 text-4xl">{extra < 0 ? "−" : "+"}{kr(Math.abs(extra))}</p>
             <p className="mt-3 text-sm text-muted">
               Lånet på {kr(s.newRealkredit)} koster ca. {kr(cost)} om måneden i rente og bidrag.{" "}
               {cut >= 0 ? `Derfor skruer vi Nordnet ned med ${kr(cut)} hver efter flytningen.` : `Derfor kan vi hver sætte ${kr(-cut)} mere i Nordnet efter flytningen.`}
