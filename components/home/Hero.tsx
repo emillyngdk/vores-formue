@@ -11,8 +11,8 @@ import { WealthLine } from "./WealthLine";
 
 const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
 const PEOPLE = [
-  { key: "emil" as const, name: people.emil.name, color: "var(--violet)" },
-  { key: "frederikke" as const, name: people.frederikke.name, color: "var(--sky)" },
+  { key: "emil" as const, name: people.emil.name, color: "var(--copper)" },
+  { key: "frederikke" as const, name: people.frederikke.name, color: "var(--steel)" },
 ];
 
 /** Forsiden: formuen i dag, formuen i 2035 og vejen derhen. Regner om, når en antagelse ændres. */
@@ -32,8 +32,8 @@ export function Hero() {
     <section aria-labelledby="hero-title" className="hero-glow">
       <div className="mx-auto max-w-[1280px] px-4 pb-10 pt-6 sm:px-6 sm:pb-16 sm:pt-12">
         <p className="eyebrow">Emil og Frederikke · tal pr. oktober 2026</p>
-        <h1 id="hero-title" className="display mt-3 text-[clamp(2rem,8.6vw,5.25rem)] leading-[1.06]">
-          På kistebunden
+        <h1 id="hero-title" className="display mt-3 text-[clamp(2rem,8.6vw,4.5rem)] leading-[1.06]">
+          Vores formue
         </h1>
 
         {/* Tre tal på én linje: i dag, 2035 og væksten imellem */}

@@ -9,9 +9,9 @@ export type View = "os" | "emil" | "frederikke";
 
 export const CATEGORIES = [
   { key: "equity", label: "Friværdi", color: "var(--mint)" },
-  { key: "stocks", label: "Aktier", color: "var(--violet)" },
+  { key: "stocks", label: "Aktier", color: "var(--copper)" },
   { key: "accounts", label: "Konti", color: "var(--accent)" },
-  { key: "pension", label: "Pension", color: "var(--sky)" },
+  { key: "pension", label: "Pension", color: "var(--steel)" },
 ] as const;
 
 /** De fire dele af formuen for et år, samlet eller for én person */

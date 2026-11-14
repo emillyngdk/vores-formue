@@ -30,9 +30,9 @@ export function Nav() {
       <header className="glass sticky top-0 z-40 border-b border-line" style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}>
         <span aria-hidden className="status-band" />
         <div className="mx-auto flex h-14 max-w-[1280px] items-center justify-between px-4 sm:px-6 md:h-16">
-          <Link href="/" className="display flex min-h-11 items-center gap-2.5 text-sm tracking-[0.12em]">
+          <Link href="/" className="flex min-h-11 min-w-0 items-center gap-2.5" aria-label="Lyng Mandal Kapital, til forsiden">
             <Logo />
-            Kistebunden
+            <span className="truncate font-serif text-[15px] font-bold uppercase leading-none tracking-[0.16em] sm:text-base">Lyng Mandal Kapital</span>
           </Link>
           <nav aria-label="Hovedmenu" className="hidden items-center gap-1 md:flex">
             {LINKS.map((l) => (

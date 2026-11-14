@@ -1,24 +1,22 @@
 import type { Metadata, Viewport } from "next";
-import "@fontsource/poppins/400.css";
-import "@fontsource/poppins/500.css";
-import "@fontsource/poppins/600.css";
-import "@fontsource/poppins/700.css";
-import "@fontsource/poppins/800.css";
+import "@fontsource-variable/inter";
+import "@fontsource/cormorant-garamond/latin-600.css";
+import "@fontsource/cormorant-garamond/latin-700.css";
 import "./globals.css";
 import { Nav } from "@/components/Nav";
 import { Providers } from "@/components/Providers";
 
 export const metadata: Metadata = {
-  title: "Kistebunden",
+  title: "Lyng Mandal Kapital",
   description: "Emil og Frederikkes private økonomi, fra i dag til 2035.",
   robots: { index: false, follow: false, nocache: true, googleBot: { index: false, follow: false } },
-  appleWebApp: { capable: true, title: "Kistebunden", statusBarStyle: "black-translucent" },
+  appleWebApp: { capable: true, title: "LM Kapital", statusBarStyle: "black-translucent" },
 };
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#0b1026" },
-    { media: "(prefers-color-scheme: light)", color: "#f6f3ec" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a1d17" },
+    { media: "(prefers-color-scheme: light)", color: "#f4f0e6" },
   ],
   width: "device-width",
   initialScale: 1,

@@ -17,8 +17,8 @@ export function Pension() {
   const t = row.flowsTotal;
   const maxV = Math.max(rows[N].emil.pension, rows[N].frederikke.pension) * 1.06;
   const vessels = [
-    { name: "Emil", v: row.emil.pension, start: rows[0].emil.pension, color: "var(--violet)", monthly: people.emil.pensionMonthly },
-    { name: "Frederikke", v: row.frederikke.pension, start: rows[0].frederikke.pension, color: "var(--sky)", monthly: people.frederikke.pensionMonthly },
+    { name: "Emil", v: row.emil.pension, start: rows[0].emil.pension, color: "var(--copper)", monthly: people.emil.pensionMonthly },
+    { name: "Frederikke", v: row.frederikke.pension, start: rows[0].frederikke.pension, color: "var(--steel)", monthly: people.frederikke.pensionMonthly },
   ];
 
   return (
@@ -31,7 +31,7 @@ export function Pension() {
           <div className="flex items-end justify-between gap-4">
             <div>
               <p className="eyebrow">Samlet pension</p>
-              <p className="display mt-1 text-[clamp(2.4rem,9vw,4rem)]" style={{ color: "var(--sky)" }}>
+              <p className="display mt-1 text-[clamp(2.4rem,9vw,4rem)]" style={{ color: "var(--steel)" }}>
                 {row.year}
               </p>
             </div>
@@ -40,7 +40,7 @@ export function Pension() {
             </p>
           </div>
           <div className="mt-2">
-            <Range label="Vælg år" value={row.year} min={rows[0].year} max={rows[N].year} step={1} onChange={(v) => setIdx(v - rows[0].year)} display={String(row.year)} color="var(--sky)" />
+            <Range label="Vælg år" value={row.year} min={rows[0].year} max={rows[N].year} step={1} onChange={(v) => setIdx(v - rows[0].year)} display={String(row.year)} color="var(--steel)" />
           </div>
           <div className="mt-5 grid grid-cols-2 gap-4 sm:gap-8">
             {vessels.map((x) => (

@@ -1,6 +1,6 @@
-# Kistebunden
+# Lyng Mandal Kapital
 
-Appen hed før "Vores Formue", og repoet og Vercel-projektet hedder stadig `vores-formue`. Privat økonomi-webapp for Emil og Frederikke. Next.js på Vercel. Et push til `main` udruller automatisk.
+Appen hed før "Kistebunden" og "Vores Formue", og repoet og Vercel-projektet hedder stadig `vores-formue`. Kort navn på hjemmeskærmen: "LM Kapital". Privat økonomi-webapp for Emil og Frederikke. Next.js på Vercel. Et push til `main` udruller automatisk.
 
 ## Når Emil sender nye tal
 1. Ret tallene i `data/household.ts`. Det er den eneste sandhedskilde. Sæt også `meta.dataAsOf` og `meta.lastUpdated`.
@@ -24,5 +24,6 @@ Statiske tekster med tal: `peers` i `data/household.ts` (sammenligningen med jæ
 - `lib/scenario.tsx`: planen og det, man leger med på forsiden ("Hvad nu hvis").
 - `lib/variables.ts`: alle variabler i lab'et (navn, interval, format). En ny variabel skal både i `ScenarioParams` og `BASE` i motoren, i `KEYS` og `LIMITS` i `lib/scenario-url.ts` og her. Planens værdier hentes fra `data/household.ts`.
 - `components/home/`: forsiden. `components/whatif/`: bjælken og skuffen. `components/lab/`, `components/ask/`: lab og Spørg Claude.
-- `design/ikon.mjs`: tegner app-ikonerne (kisten). Køres kun, når ikonet ændres.
+- `design/ikon.mjs`: tegner app-ikonerne (huset med LM). Køres kun, når ikonet ændres.
+- Udtryk: skovgrøn og guld. Farverne er tokens i `app/globals.css` (`--accent` guld, `--copper` aktier/Emil, `--steel` pension/Frederikke, `--mint` bolig/plus, `--coral` minus). Overskrifter i Cormorant Garamond (`.display`), resten i Inter.
 - `artifact/`: bygger den udgave, der kan vises som artifact i Claude (`npm run artifact`).

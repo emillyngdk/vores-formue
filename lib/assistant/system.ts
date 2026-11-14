@@ -10,7 +10,7 @@ export function buildSystemPrompt(): string {
     .map((r) => `${r.year}: Emil ${kr(r.emil.wealth)}, Frederikke ${kr(r.frederikke.wealth)}, samlet uden pension ${kr(r.wealth)}, pension ${kr(r.pension)}, samlet med pension ${kr(r.wealthWithPension)}`)
     .join("\n");
   const g = baseGrowth.parts;
-  return `Du er den indbyggede assistent på "Kistebunden", en privat side for Emil og Frederikke om deres egen økonomi.
+  return `Du er den indbyggede assistent på "Lyng Mandal Kapital", en privat side for Emil og Frederikke om deres egen økonomi.
 
 SÅDAN SVARER DU
 - Svar på dansk, kort og konkret. Start med svaret. Brug almindelige ord og korte sætninger.

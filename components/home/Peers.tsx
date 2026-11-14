@@ -86,8 +86,8 @@ export function Peers() {
         <Segmented options={[{ value: "nu", label: "I dag" }, { value: "2031", label: "2031 (skøn)" }]} value={when} onChange={setWhen} label="Tidspunkt" />
       </div>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <Strip name="Emil" age={e.age} wealth={now ? peers.emil.ourWealth : peers.projection2031.emil.wealth} marks={e} placement={e.placement} color="var(--violet)" />
-        <Strip name="Frederikke" age={f.age} wealth={now ? peers.frederikke.ourWealth : peers.projection2031.frederikke.wealth} marks={f} placement={f.placement} color="var(--sky)" />
+        <Strip name="Emil" age={e.age} wealth={now ? peers.emil.ourWealth : peers.projection2031.emil.wealth} marks={e} placement={e.placement} color="var(--copper)" />
+        <Strip name="Frederikke" age={f.age} wealth={now ? peers.frederikke.ourWealth : peers.projection2031.frederikke.wealth} marks={f} placement={f.placement} color="var(--steel)" />
       </div>
       <p className="mt-4 max-w-3xl text-xs text-muted">
         Kilde: {peers.source} {now ? "" : `${peers.projection2031.note} Tallene for 2031 følger den oprindelige plan.`} Placeringen afhænger meget af, hvad lejligheden er værd.

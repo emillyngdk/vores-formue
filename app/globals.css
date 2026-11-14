@@ -1,70 +1,70 @@
 @import "tailwindcss";
 
-/* ───────────── NAT & RAV ─────────────
-   Mørk er standard. Lys via data-theme="light"
-   eller systemets lyse tilstand, når intet er valgt. */
+/* ───────────── SKOV & GULD ─────────────
+   Lyng Mandal Kapital. Mørk skovgrøn er standard.
+   Lys via data-theme="light" eller systemets lyse tilstand, når intet er valgt. */
 :root {
-  --bg: #0b1026;
-  --surface: #141a38;
-  --surface-2: #1c2350;
-  --ink: #f4f1ea;
-  --muted: #9aa0c3;
-  --accent: #ffb547;
-  --accent-text: #ffb547;
-  --violet: #8b6cff;
-  --mint: #3ddc97;
-  --sky: #5ac8fa;
-  --coral: #ff6b5b;
-  --line: rgba(255, 255, 255, 0.08);
-  --on-accent: #0b1026;
-  --on-fill: #0b1026;
-  --glow-a: rgba(255, 181, 71, 0.22);
-  --glow-b: rgba(139, 108, 255, 0.22);
+  --bg: #0a1d17;
+  --surface: #10291f;
+  --surface-2: #173628;
+  --ink: #f4efe3;
+  --muted: #9db1a6;
+  --accent: #e2b54f;
+  --accent-text: #e8bd55;
+  --copper: #e3955f;
+  --mint: #8ed6a0;
+  --steel: #8ab8e6;
+  --coral: #f0727a;
+  --line: rgba(244, 239, 227, 0.09);
+  --on-accent: #0a1d17;
+  --on-fill: #0a1d17;
+  --glow-a: rgba(226, 181, 79, 0.14);
+  --glow-b: rgba(47, 138, 97, 0.3);
   --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
   color-scheme: dark;
 }
 
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) {
-    --bg: #f6f3ec;
-    --surface: #ffffff;
-    --surface-2: #efeae0;
-    --ink: #0b1026;
-    --muted: #5d6380;
-      --accent: #e08a00;
-    --accent-text: #96590a;
-    --violet: #5b3fe0;
-    --mint: #0a7a50;
-    --sky: #1269b3;
-    --coral: #c8361f;
-    --line: rgba(11, 16, 38, 0.1);
-    --on-accent: #0b1026;
-    --on-fill: #ffffff;
-    --glow-a: rgba(224, 138, 0, 0.16);
-    --glow-b: rgba(91, 63, 224, 0.12);
-    --shadow: 0 10px 30px rgba(11, 16, 38, 0.08);
+  --bg: #f4f0e6;
+  --surface: #ffffff;
+  --surface-2: #ebe5d6;
+  --ink: #12261d;
+  --muted: #56685e;
+  --accent: #c9972f;
+  --accent-text: #7a5a12;
+  --copper: #b0552a;
+  --mint: #1d7a49;
+  --steel: #2c6aa3;
+  --coral: #c2393f;
+  --line: rgba(18, 38, 29, 0.1);
+  --on-accent: #12261d;
+  --on-fill: #ffffff;
+  --glow-a: rgba(201, 151, 47, 0.16);
+  --glow-b: rgba(29, 122, 73, 0.12);
+  --shadow: 0 10px 30px rgba(18, 38, 29, 0.08);
     color-scheme: light;
   }
 }
 
 :root[data-theme="light"] {
-  --bg: #f6f3ec;
+  --bg: #f4f0e6;
   --surface: #ffffff;
-  --surface-2: #efeae0;
-  --ink: #0b1026;
-  --muted: #5d6380;
-  --accent: #e08a00;
-  --accent-text: #96590a;
-  --violet: #5b3fe0;
-  --mint: #0a7a50;
-  --sky: #1269b3;
-  --coral: #c8361f;
-  --line: rgba(11, 16, 38, 0.1);
-  --on-accent: #0b1026;
+  --surface-2: #ebe5d6;
+  --ink: #12261d;
+  --muted: #56685e;
+  --accent: #c9972f;
+  --accent-text: #7a5a12;
+  --copper: #b0552a;
+  --mint: #1d7a49;
+  --steel: #2c6aa3;
+  --coral: #c2393f;
+  --line: rgba(18, 38, 29, 0.1);
+  --on-accent: #12261d;
   --on-fill: #ffffff;
-  --glow-a: rgba(224, 138, 0, 0.16);
-  --glow-b: rgba(91, 63, 224, 0.12);
-  --shadow: 0 10px 30px rgba(11, 16, 38, 0.08);
+  --glow-a: rgba(201, 151, 47, 0.16);
+  --glow-b: rgba(29, 122, 73, 0.12);
+  --shadow: 0 10px 30px rgba(18, 38, 29, 0.08);
   color-scheme: light;
 }
 
@@ -76,13 +76,14 @@
   --color-muted: var(--muted);
   --color-accent: var(--accent);
   --color-accent-text: var(--accent-text);
-  --color-violet: var(--violet);
+  --color-violet: var(--copper);
   --color-mint: var(--mint);
-  --color-sky: var(--sky);
+  --color-sky: var(--steel);
   --color-coral: var(--coral);
   --color-line: var(--line);
   --color-on-accent: var(--on-accent);
-  --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter Variable", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
 }
 
 html {
@@ -110,11 +111,13 @@ body::before {
 }
 
 .display {
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
-  /* Plads til ringen i Å, så den ikke rammer linjen over */
+  font-family: var(--font-serif);
+  font-weight: 600;
+  letter-spacing: -0.01em;
   line-height: 1.02;
+  font-variant-numeric: lining-nums;
+  /* Cormorant har små bogstaver i forhold til sin størrelse. Det her gør den lige så stor som før. */
+  font-size-adjust: 0.52;
 }
 
 .num {
@@ -270,11 +273,11 @@ body::before {
 /* Telefonens statuslinje har hvid tekst, når siden er lagt på hjemmeskærmen. I lyst tema får den en mørk baggrund. */
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) {
-    --status-band: #0b1026;
+    --status-band: #0f3b2e;
   }
 }
 :root[data-theme="light"] {
-  --status-band: #0b1026;
+  --status-band: #0f3b2e;
 }
 .status-band {
   position: absolute;

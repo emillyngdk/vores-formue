@@ -55,14 +55,14 @@ const BUCKETS: Bucket[] = [
     note: `Pensionen på ${kr(pension)} om måneden trækkes, før lønnen udbetales, og er ikke med her.`,
   }),
   make({
-    id: "egne", label: "Egne faste udgifter", sub: "A-kasse, billån, abonnementer", color: "var(--sky)", onColor: "var(--on-fill)",
+    id: "egne", label: "Egne faste udgifter", sub: "A-kasse, billån, abonnementer", color: "var(--steel)", onColor: "var(--on-fill)",
     lines: [
       ...monthlyFlow.personalFixed.frederikke.map((l) => ({ label: l.label, value: l.monthly, who: "Frederikke" as const })),
       ...monthlyFlow.personalFixed.emil.map((l) => ({ label: l.label, value: l.monthly, who: "Emil" as const })),
     ].sort((a, b) => b.value - a.value),
   }),
   make({
-    id: "rest", label: "Mad, privat og resten", sub: "Det, der er tilbage på lønkontoen", color: "var(--violet)", onColor: "var(--on-fill)",
+    id: "rest", label: "Mad, privat og resten", sub: "Det, der er tilbage på lønkontoen", color: "var(--copper)", onColor: "var(--on-fill)",
     lines: [
       { label: "Til rådighed", value: restF, who: "Frederikke" },
       { label: "Til rådighed", value: restE, who: "Emil" },

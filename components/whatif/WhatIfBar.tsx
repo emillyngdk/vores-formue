@@ -311,15 +311,15 @@ export function WhatIfBar() {
               )}
               {open === "returns" && (
                 <div className="space-y-5">
-                  <Range label="Aktier om året" value={d.stockReturn} min={0.02} max={0.12} step={0.005} onChange={(v) => sc.set("stockReturn", v)} display={pct(d.stockReturn, 1)} color="var(--violet)" />
-                  <Range label="Pension om året" value={d.pensionReturn} min={0.01} max={0.07} step={0.005} onChange={(v) => sc.set("pensionReturn", v)} display={pct(d.pensionReturn, 1)} color="var(--sky)" />
+                  <Range label="Aktier om året" value={d.stockReturn} min={0.02} max={0.12} step={0.005} onChange={(v) => sc.set("stockReturn", v)} display={pct(d.stockReturn, 1)} color="var(--copper)" />
+                  <Range label="Pension om året" value={d.pensionReturn} min={0.01} max={0.07} step={0.005} onChange={(v) => sc.set("pensionReturn", v)} display={pct(d.pensionReturn, 1)} color="var(--steel)" />
                   <Range label="Huspriser om året, efter købet" value={d.houseGrowth} min={0} max={0.07} step={0.005} onChange={(v) => sc.set("houseGrowth", v)} display={pct(d.houseGrowth, 1)} color="var(--mint)" />
                 </div>
               )}
               {open === "saving" && (
                 <div className="space-y-5">
-                  <Range label="Emil pr. måned" value={d.nordnetEmil} min={0} max={15_000} step={500} onChange={(v) => sc.set("nordnetEmil", v)} display={kr(d.nordnetEmil)} color="var(--violet)" />
-                  <Range label="Frederikke pr. måned" value={d.nordnetFrederikke} min={0} max={15_000} step={500} onChange={(v) => sc.set("nordnetFrederikke", v)} display={kr(d.nordnetFrederikke)} color="var(--sky)" />
+                  <Range label="Emil pr. måned" value={d.nordnetEmil} min={0} max={15_000} step={500} onChange={(v) => sc.set("nordnetEmil", v)} display={kr(d.nordnetEmil)} color="var(--copper)" />
+                  <Range label="Frederikke pr. måned" value={d.nordnetFrederikke} min={0} max={15_000} step={500} onChange={(v) => sc.set("nordnetFrederikke", v)} display={kr(d.nordnetFrederikke)} color="var(--steel)" />
                   <p className="text-sm text-muted">
                     {effectiveCut(d) >= 0 ? `Efter flytningen trækkes ${kr(effectiveCut(d))} fra hos hver, fordi huset koster mere.` : `Efter flytningen kan hver sætte ${kr(-effectiveCut(d))} mere ind, fordi huset er billigere.`}
                   </p>

@@ -255,7 +255,7 @@ export function YearByYear() {
                   <td className="num hidden px-3 py-3 font-medium md:table-cell">{kr(r.emil.wealth)}</td>
                   <td className="num hidden px-3 py-3 font-medium md:table-cell">{kr(r.frederikke.wealth)}</td>
                   <td className="num px-3 py-3">{kr(r.wealth)}</td>
-                  <td className="num hidden px-3 py-3 font-medium lg:table-cell" style={{ color: "var(--sky)" }}>{kr(r.pension)}</td>
+                  <td className="num hidden px-3 py-3 font-medium lg:table-cell" style={{ color: "var(--steel)" }}>{kr(r.pension)}</td>
                   <td className="num px-3 py-3 sm:px-6" style={{ color: "var(--mint)" }}>{kr(r.wealthWithPension)}</td>
                 </tr>
               ))}

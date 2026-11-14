@@ -31,8 +31,8 @@ const p0 = (v: number) => pct(v, 0);
 const md = (v: number) => `${kr(v)}/md.`;
 const mio = (v: number) => `${mioTal(v)} kr.`;
 
-const VIOLET = "var(--violet)";
-const SKY = "var(--sky)";
+const COPPER = "var(--copper)";
+const STEEL = "var(--steel)";
 const MINT = "var(--mint)";
 const CORAL = "var(--coral)";
 
@@ -43,8 +43,8 @@ export const GROUPS: Group[] = [
     title: "Afkast og boligpriser",
     sub: "Hvad aktier, pension og boliger giver om året",
     fields: [
-      { key: "stockReturn", label: "Aktier om året", min: -0.02, max: 0.12, step: 0.005, fmt: p1, color: VIOLET },
-      { key: "pensionReturn", label: "Pension om året", min: 0, max: 0.08, step: 0.005, fmt: p1, color: SKY },
+      { key: "stockReturn", label: "Aktier om året", min: -0.02, max: 0.12, step: 0.005, fmt: p1, color: COPPER },
+      { key: "pensionReturn", label: "Pension om året", min: 0, max: 0.08, step: 0.005, fmt: p1, color: STEEL },
       {
         key: "apartmentGrowth", label: "Lejlighedens priser frem til salget", min: -0.05, max: 0.12, step: 0.005, fmt: p1, color: MINT,
         hint: `Om året. Nykredit venter ${pct(housingMarket.apartmentsAarhus.growth2027, 1)} for lejligheder i Aarhus i 2027.`,
@@ -88,8 +88,8 @@ export const GROUPS: Group[] = [
     sub: "Det, vi selv sætter ind hver måned",
     fields: [
       { key: "salaryGrowth", label: "Lønstigning om året", min: 0, max: 0.06, step: 0.0025, nudge: 0.005, fmt: p2, hint: "Hæver pension og Nordnet i samme takt." },
-      { key: "nordnetEmil", label: "Emil til Nordnet", min: 0, max: 15_000, step: 500, fmt: md, color: VIOLET },
-      { key: "nordnetFrederikke", label: "Frederikke til Nordnet", min: 0, max: 15_000, step: 500, fmt: md, color: SKY },
+      { key: "nordnetEmil", label: "Emil til Nordnet", min: 0, max: 15_000, step: 500, fmt: md, color: COPPER },
+      { key: "nordnetFrederikke", label: "Frederikke til Nordnet", min: 0, max: 15_000, step: 500, fmt: md, color: STEEL },
       {
         key: "nordnetCutAfterMove", label: "Mindre i Nordnet efter flytningen", min: -3_000, max: 6_000, step: 100, fmt: md,
         hint: "Pr. person ved planens hus og rente. Et dyrere lån lægges selv oveni.",
@@ -103,8 +103,8 @@ export const GROUPS: Group[] = [
     title: "Pension",
     sub: "Indbetalt via lønnen hver måned",
     fields: [
-      { key: "pensionEmil", label: "Emil", min: 0, max: 20_000, step: 1, nudge: 250, fmt: md, color: VIOLET },
-      { key: "pensionFrederikke", label: "Frederikke", min: 0, max: 20_000, step: 1, nudge: 250, fmt: md, color: SKY },
+      { key: "pensionEmil", label: "Emil", min: 0, max: 20_000, step: 1, nudge: 250, fmt: md, color: COPPER },
+      { key: "pensionFrederikke", label: "Frederikke", min: 0, max: 20_000, step: 1, nudge: 250, fmt: md, color: STEEL },
     ],
   },
   {

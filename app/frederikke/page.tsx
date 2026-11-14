@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { PersonView } from "@/components/person/PersonView";
 
-export const metadata: Metadata = { title: "Frederikke · Kistebunden" };
+export const metadata: Metadata = { title: "Frederikke · Lyng Mandal Kapital" };
 
 export default function Page() {
   return (

@@ -41,13 +41,13 @@ fs.rmSync(path.join(out, "prerender.cjs"));
 
 const cssDir = path.join(root, ".next/static/chunks");
 let css = fs.readdirSync(cssDir).filter((f) => f.endsWith(".css")).map((f) => fs.readFileSync(path.join(cssDir, f), "utf8")).join("\n");
-css = css.replace(/@font-face\s*\{[^}]*\}/g, ""); // Poppins hentes fra Google Fonts i stedet
+css = css.replace(/@font-face\s*\{[^}]*\}/g, ""); // Skrifterne hentes fra Google Fonts i stedet
 if (/url\(\s*["']?(?:\.\.?\/|\/|https?:)/.test(css)) throw new Error("CSS'en henviser stadig til eksterne filer");
 css += "\n" + fs.readFileSync(path.join(root, "artifact/extra.css"), "utf8");
 
-const page = `<title>Kistebunden</title>
+const page = `<title>Lyng Mandal Kapital</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400..800&display=swap">
 <style>
 ${css}
 </style>
