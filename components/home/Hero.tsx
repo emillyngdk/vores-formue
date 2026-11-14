@@ -32,7 +32,7 @@ export function Hero() {
     <section aria-labelledby="hero-title" className="hero-glow">
       <div className="mx-auto max-w-[1280px] px-4 pb-10 pt-6 sm:px-6 sm:pb-16 sm:pt-12">
         <p className="eyebrow">Emil og Frederikke · tal pr. oktober 2026</p>
-        <h1 id="hero-title" className="display mt-3 text-[clamp(2rem,8.6vw,4.5rem)] leading-[1.06]">
+        <h1 id="hero-title" className="display mt-3 text-[clamp(2rem,8.6vw,5.25rem)] leading-[1.06]">
           Vores formue
         </h1>
 

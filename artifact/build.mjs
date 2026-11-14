@@ -47,7 +47,7 @@ css += "\n" + fs.readFileSync(path.join(root, "artifact/extra.css"), "utf8");
 
 const page = `<title>Lyng Mandal Kapital</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400..800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap">
 <style>
 ${css}
 </style>

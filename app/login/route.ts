@@ -27,14 +27,13 @@ export async function GET(req: Request) {
 <title>Log ind · Lyng Mandal Kapital</title>
 <link rel="icon" href="/icons/icon-192.png" />
 <style>
-  @font-face { font-family: "Cormorant Garamond"; font-weight: 600; font-display: swap; src: url(/fonts/cormorant-garamond-latin-600-normal.woff2) format("woff2"); }
   :root { color-scheme: dark; }
   * { box-sizing: border-box; }
   body { margin: 0; min-height: 100dvh; display: grid; place-items: center; padding: 16px; background: #0a1d17; color: #f4efe3;
-    font-family: "Inter Variable", Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-family: Poppins, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
     background-image: radial-gradient(40% 40% at 30% 30%, rgba(226,181,79,.14), transparent 70%), radial-gradient(45% 45% at 70% 70%, rgba(47,138,97,.32), transparent 70%); }
   main { width: 100%; max-width: 400px; background: #10291f; border: 1px solid rgba(244,239,227,.09); border-radius: 28px; padding: 32px; }
-  h1 { margin: 0 0 6px; font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif; font-size: 2.25rem; font-weight: 600; letter-spacing: -.01em; line-height: 1; }
+  h1 { margin: 0 0 6px; font-size: 1.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: -.02em; line-height: 1.05; }
   .sub { margin: 0 0 28px; color: #9db1a6; }
   label { display: block; font-size: .875rem; font-weight: 600; margin-bottom: 6px; }
   input { width: 100%; min-height: 52px; border-radius: 16px; border: 1px solid rgba(244,239,227,.14); background: #173628; color: inherit; font-size: 1rem; padding: 0 16px; }

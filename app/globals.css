@@ -82,8 +82,7 @@
   --color-coral: var(--coral);
   --color-line: var(--line);
   --color-on-accent: var(--on-accent);
-  --font-sans: "Inter Variable", "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
 }
 
 html {
@@ -111,13 +110,11 @@ body::before {
 }
 
 .display {
-  font-family: var(--font-serif);
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  /* Plads til ringen i Å, så den ikke rammer linjen over */
   line-height: 1.02;
-  font-variant-numeric: lining-nums;
-  /* Cormorant har små bogstaver i forhold til sin størrelse. Det her gør den lige så stor som før. */
-  font-size-adjust: 0.52;
 }
 
 .num {
