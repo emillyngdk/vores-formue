@@ -30,7 +30,7 @@ export async function GET(req: Request) {
   @font-face { font-family: "Anton"; font-weight: 400; font-display: swap; src: url(/fonts/anton-latin-400-normal.woff2) format("woff2"); }
   :root { color-scheme: light; }
   * { box-sizing: border-box; }
-  body { margin: 0; min-height: 100dvh; display: grid; place-items: center; padding: 16px; background: #fbe38e; color: #fbe38e;
+  body { margin: 0; min-height: 100dvh; display: grid; place-items: center; padding: 16px; background: #e8cd7a; color: #fbe38e;
     font-family: Poppins, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
     background-image: radial-gradient(40% 40% at 25% 20%, rgba(255,250,230,.7), transparent 70%), radial-gradient(40% 40% at 75% 85%, rgba(200,112,30,.16), transparent 70%); }
   main { width: 100%; max-width: 400px; background: #3a2218; border: 0; box-shadow: 0 24px 60px rgba(58,34,24,.25); border-radius: 28px; padding: 32px; }

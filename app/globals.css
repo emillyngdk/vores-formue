@@ -4,25 +4,25 @@
    Lyng Mandal Kapital. Butter Yellow og Dark Cocoa, intet andet. Kategorierne skelnes med brune toner.
    Butter er standard. Cocoa, når man selv vælger mørk tilstand (data-theme="dark"). */
 :root {
-  --bg: #fbe38e;
-  --surface: #fff3c4;
-  --surface-2: #f3d46e;
+  --bg: #e8cd7a;
+  --surface: #f2de9c;
+  --surface-2: #dcbe66;
   --ink: #3a2218;
-  --muted: #6b4f3c;
+  --muted: #5e4433;
   --accent: #3a2218;
-  --accent-text: #9a4a0c;
+  --accent-text: #8a3f08;
   --choc: #8a5a3b;
   --caramel: #c8701e;
   --home: #3a2218;
-  --cash: #e0a83e;
-  --mint: #3f6b12;
+  --cash: #b08d5b;
+  --mint: #355c0f;
   --coral: #b8361f;
-  --line: rgba(58, 34, 24, 0.14);
+  --line: rgba(58, 34, 24, 0.16);
   --on-accent: #fbe38e;
   --on-fill: #fff3c4;
-  --glow-a: rgba(255, 249, 226, 0.75);
-  --glow-b: rgba(242, 196, 72, 0.45);
-  --area: rgba(255, 249, 226, 0.95);
+  --glow-a: rgba(255, 244, 205, 0.55);
+  --glow-b: rgba(200, 140, 40, 0.22);
+  --area: rgba(255, 244, 205, 0.8);
   --shadow: 0 10px 30px rgba(58, 34, 24, 0.12);
   color-scheme: light;
 }
